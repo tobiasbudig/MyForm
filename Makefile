@@ -2,55 +2,55 @@
 
 # Development
 dev:
-	docker-compose -f docker-compose.dev.yml up --build
+	docker compose -f docker-compose.dev.yml up --build
 
 dev-d:
-	docker-compose -f docker-compose.dev.yml up --build -d
+	docker compose -f docker-compose.dev.yml up --build -d
 
 # Production
 prod:
-	docker-compose up --build -d
+	docker compose up --build -d
 
 # Stop all containers
 down:
-	docker-compose -f docker-compose.dev.yml down
-	docker-compose down
+	docker compose -f docker-compose.dev.yml down
+	docker compose down
 
 # View logs
 logs:
-	docker-compose -f docker-compose.dev.yml logs -f
+	docker compose -f docker-compose.dev.yml logs -f
 
 logs-server:
-	docker-compose -f docker-compose.dev.yml logs -f server
+	docker compose -f docker-compose.dev.yml logs -f server
 
 logs-client:
-	docker-compose -f docker-compose.dev.yml logs -f client
+	docker compose -f docker-compose.dev.yml logs -f client
 
 logs-db:
-	docker-compose -f docker-compose.dev.yml logs -f postgres
+	docker compose -f docker-compose.dev.yml logs -f postgres
 
 # Database shell
 db-shell:
-	docker-compose -f docker-compose.dev.yml exec postgres psql -U questionnaire -d questionnaire_db
+	docker compose -f docker-compose.dev.yml exec postgres psql -U myform -d myform_db
 
 # Clean up volumes (WARNING: deletes data)
 clean:
-	docker-compose -f docker-compose.dev.yml down -v
-	docker-compose down -v
+	docker compose -f docker-compose.dev.yml down -v
+	docker compose down -v
 	@echo "All volumes deleted. Data has been removed."
 
 # Rebuild without cache
 rebuild:
-	docker-compose -f docker-compose.dev.yml build --no-cache
-	docker-compose -f docker-compose.dev.yml up
+	docker compose -f docker-compose.dev.yml build --no-cache
+	docker compose -f docker-compose.dev.yml up
 
 # Reset database
 db-reset:
-	docker-compose -f docker-compose.dev.yml down -v
-	docker-compose -f docker-compose.dev.yml up -d postgres
+	docker compose -f docker-compose.dev.yml down -v
+	docker compose -f docker-compose.dev.yml up -d postgres
 	@echo "Waiting for PostgreSQL to initialize..."
 	@sleep 5
-	docker-compose -f docker-compose.dev.yml up -d
+	docker compose -f docker-compose.dev.yml up -d
 
 # Help
 help:

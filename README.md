@@ -288,10 +288,10 @@ make clean
 make prod
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # Stop production
-docker-compose down
+docker compose down
 ```
 
 ## API Endpoints
@@ -391,7 +391,7 @@ DB_PORT=54320
 Check if PostgreSQL is running:
 
 ```bash
-docker-compose -f docker-compose.dev.yml ps
+docker compose -f docker-compose.dev.yml ps
 make logs-db
 ```
 
@@ -453,7 +453,7 @@ nano .env
 # Set POSTGRES_PASSWORD and ADMIN_PASSWORD (use hash from step 2)
 
 # 4. Start services
-docker-compose up -d
+docker compose up -d
 
 # 5. Access at http://YOUR_SERVER_IP
 ```
@@ -518,7 +518,7 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ```bash
 # Start MyForm
-docker-compose up -d
+docker compose up -d
 
 # Get SSL certificate (auto-configures nginx)
 sudo certbot --nginx -d your-domain.com
@@ -530,16 +530,16 @@ Done! Access at `https://your-domain.com`
 
 ```bash
 # Backup database
-docker-compose exec postgres pg_dump -U myform myform_db > backup-$(date +%Y%m%d).sql
+docker compose exec postgres pg_dump -U myform myform_db > backup-$(date +%Y%m%d).sql
 
 # Backup forms
 tar -czf forms-backup-$(date +%Y%m%d).tar.gz server/forms/
 
 # Restore database
-cat backup.sql | docker-compose exec -T postgres psql -U myform myform_db
+cat backup.sql | docker compose exec -T postgres psql -U myform myform_db
 
 # Update MyForm
-git pull && docker-compose down && docker-compose build && docker-compose up -d
+git pull && docker compose down && docker compose build && docker compose up -d
 ```
 
 
