@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: myform_db_dev
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER environment variable is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD environment variable is required}
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB environment variable is required}
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - myform_network_dev
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    container_name: myform_server_dev
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD environment variable is required - must be bcrypt hash}
+      PORT: 3001
+      CLIENT_URL: http://localhost:5173
+    volumes:
+      - ./server/src:/app/src
+      - ./server/forms:/app/forms
+      - ./server/package.json:/app/package.json:ro
+      - ./server/logs:/app/logs
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - myform_network_dev
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    container_name: myform_client_dev
+    environment:
+      VITE_API_URL: http://localhost:3001/api
+    volumes:
+      - ./client/src:/app/src
+      - ./client/index.html:/app/index.html:ro
+      - ./client/vite.config.js:/app/vite.config.js:ro
+      - ./client/tailwind.config.js:/app/tailwind.config.js:ro
+      - ./client/postcss.config.js:/app/postcss.config.js:ro
+      - ./client/package.json:/app/package.json:ro
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+    networks:
+      - myform_network_dev
+
+volumes:
+  postgres_data_dev:
+
+networks:
+  myform_network_dev:
+    driver: bridge

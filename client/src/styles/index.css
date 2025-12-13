@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-white text-textPrimary antialiased;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', 'Roboto', system-ui, sans-serif;
+  }
+
+  * {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+}
+
+@layer utilities {
+  .transition-default {
+    @apply transition-all duration-200 ease-in-out;
+  }
+}
