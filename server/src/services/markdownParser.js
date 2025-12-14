@@ -74,8 +74,10 @@ function parseQuestionBlock(block, index) {
     const metadata = {};
     const optionsList = [];
     const labelsList = [];
+    const statementsList = [];
     let isParsingOptions = false;
     let isParsingLabels = false;
+    let isParsingStatements = false;
 
     for (let i = 0; i < lines.length; i++) {
       const originalLine = lines[i];
@@ -85,48 +87,75 @@ function parseQuestionBlock(block, index) {
         metadata.type = line.split(':')[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
+        isParsingStatements = false;
       } else if (line.startsWith('- required:')) {
         metadata.required = line.split(':')[1].trim() === 'true';
         isParsingOptions = false;
         isParsingLabels = false;
+        isParsingStatements = false;
       } else if (line.startsWith('- has_other:')) {
         metadata.has_other = line.split(':')[1].trim() === 'true';
         isParsingOptions = false;
         isParsingLabels = false;
+        isParsingStatements = false;
       } else if (line.startsWith('- id:')) {
         metadata.id = line.split(':')[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
+        isParsingStatements = false;
       } else if (line.startsWith('- placeholder:')) {
         metadata.placeholder = line.split(':', 2)[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
+        isParsingStatements = false;
       } else if (line.startsWith('- help:')) {
         metadata.help = line.split(':', 2)[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
+        isParsingStatements = false;
       } else if (line.startsWith('- explanation:')) {
         metadata.explanation = line.split(':', 2)[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
+        isParsingStatements = false;
+      } else if (line.startsWith('- depends_on:')) {
+        metadata.depends_on = line.split(':')[1].trim();
+        isParsingOptions = false;
+        isParsingLabels = false;
+        isParsingStatements = false;
+      } else if (line.startsWith('- show_when:')) {
+        metadata.show_when = line.split(':', 2)[1].trim();
+        isParsingOptions = false;
+        isParsingLabels = false;
+        isParsingStatements = false;
       } else if (line.startsWith('- maxLength:')) {
         metadata.maxLength = parseInt(line.split(':')[1].trim());
         isParsingOptions = false;
         isParsingLabels = false;
+        isParsingStatements = false;
       } else if (line.startsWith('- scale:')) {
         metadata.scale = parseInt(line.split(':')[1].trim());
         isParsingOptions = false;
         isParsingLabels = false;
+        isParsingStatements = false;
       } else if (line.startsWith('- options:')) {
         isParsingOptions = true;
         isParsingLabels = false;
+        isParsingStatements = false;
       } else if (line.startsWith('- labels:')) {
         isParsingLabels = true;
         isParsingOptions = false;
+        isParsingStatements = false;
+      } else if (line.startsWith('- statements:')) {
+        isParsingStatements = true;
+        isParsingOptions = false;
+        isParsingLabels = false;
       } else if (originalLine.startsWith('  - ') && isParsingOptions) {
         optionsList.push(line.replace(/^-\s*/, '').trim());
       } else if (originalLine.startsWith('  - ') && isParsingLabels) {
         labelsList.push(line.replace(/^-\s*/, '').trim());
+      } else if (originalLine.startsWith('  - ') && isParsingStatements) {
+        statementsList.push(line.replace(/^-\s*/, '').trim());
       }
     }
 
@@ -136,6 +165,10 @@ function parseQuestionBlock(block, index) {
 
     if (labelsList.length > 0) {
       metadata.labels = labelsList;
+    }
+
+    if (statementsList.length > 0) {
+      metadata.statements = statementsList;
     }
 
     // Build question object
@@ -155,6 +188,14 @@ function parseQuestionBlock(block, index) {
     if (metadata.scale) question.scale = metadata.scale;
     if (metadata.options) question.options = metadata.options;
     if (metadata.labels) question.labels = metadata.labels;
+    if (metadata.statements) question.statements = metadata.statements;
+    if (metadata.depends_on) question.depends_on = metadata.depends_on;
+    if (metadata.show_when) question.show_when = metadata.show_when;
+
+    // Validation: warn if show_when without depends_on
+    if (metadata.show_when && !metadata.depends_on) {
+      logger.warn(`Question "${question.id}" has show_when but no depends_on`);
+    }
 
     return question;
   } catch (error) {

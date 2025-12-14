@@ -35,6 +35,26 @@ thankYou:
 
 ---
 
+# How much do you agree with these statements?
+- type: grid
+- required: false
+- id: satisfaction_grid
+- help: "Rate each statement based on your experience"
+- explanation: "Your feedback on these specific aspects helps us understand which areas we're excelling in and where we need to improve. Please rate each statement honestly."
+- options:
+  - Strongly Disagree
+  - Disagree
+  - Neutral
+  - Agree
+  - Strongly Agree
+- statements:
+  - The product is easy to use
+  - The product meets my needs
+  - The product is reliable
+  - I would recommend this product
+
+---
+
 # Which features do you use?
 - type: multiple_choice
 - required: false
@@ -62,6 +82,17 @@ thankYou:
   - Designer
   - Manager
   - Executive
+
+---
+
+# Please specify your role in Dev
+- type: short_text
+- depends_on: role
+- show_when: Developer
+- id: role_specify
+- required: false
+- placeholder: "Enter your specific role..."
+- maxLength: 100
 
 ---
 

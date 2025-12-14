@@ -26,7 +26,7 @@ export default function LongText({ question, value, onChange, onSubmit, comment,
         placeholder={question.placeholder || 'Your answer...'}
         maxLength={maxLength}
         rows={6}
-        className="w-full px-4 py-3 text-lg border-2 border-border rounded-lg focus:border-primary transition-default resize-y"
+        className="w-full px-4 py-3 text-lg border border-border rounded-lg focus:border-primary focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-default resize-y"
       />
       <div className="mt-2 text-sm text-textSecondary text-right">
         {(value || '').length} / {maxLength}

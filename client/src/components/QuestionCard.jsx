@@ -7,6 +7,7 @@ import SingleChoice from './questions/SingleChoice';
 import MultipleChoice from './questions/MultipleChoice';
 import LikertScale from './questions/LikertScale';
 import NPS from './questions/NPS';
+import Grid from './questions/Grid';
 import Modal from './Modal';
 
 const questionComponents = {
@@ -16,6 +17,7 @@ const questionComponents = {
   multiple_choice: MultipleChoice,
   likert: LikertScale,
   nps: NPS,
+  grid: Grid,
 };
 
 export default function QuestionCard({
