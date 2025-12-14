@@ -81,15 +81,15 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
-            className={`w-full px-6 py-4 text-left border-2 rounded-lg transition-default hover:scale-[1.01] ${
+            className={`w-full px-4 py-3 sm:px-6 sm:py-4 text-left border-2 rounded-lg transition-default hover:scale-[1.01] ${
               isSelected
                 ? 'border-primary bg-primary-50 text-primary'
                 : 'border-border hover:border-primary-light'
             }`}
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div
-                className={`w-5 h-5 border-2 rounded flex items-center justify-center ${
+                className={`w-6 h-6 sm:w-5 sm:h-5 border-2 rounded flex items-center justify-center flex-shrink-0 ${
                   isSelected ? 'border-primary bg-primary' : 'border-gray-400'
                 }`}
               >
@@ -107,7 +107,7 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
                   </svg>
                 )}
               </div>
-              <span className="text-lg">{option}</span>
+              <span className="text-base sm:text-lg">{option}</span>
             </div>
           </motion.button>
         );
