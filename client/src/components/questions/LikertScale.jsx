@@ -1,26 +1,52 @@
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 export default function LikertScale({ question, value, onChange, onSubmit }) {
   const scale = question.scale || 5;
   const labels = question.labels || [];
+  const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
+  const timeoutRef = useRef(null);
 
   const handleSelect = (val) => {
+    // Clear any existing timeout (handles rapid clicking)
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
     onChange(val);
-    // Don't auto-advance - let user click Next button
+    setIsAutoAdvancing(true);
+
+    timeoutRef.current = setTimeout(() => {
+      onSubmit();
+    }, 300);
   };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="w-full">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch gap-4">
         {Array.from({ length: scale }, (_, i) => i + 1).map((num, index) => (
           <motion.button
             key={num}
             type="button"
             onClick={() => handleSelect(num)}
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.05 }}
-            className={`flex-1 min-w-[60px] px-4 py-3 border-2 rounded-lg transition-default hover:scale-105 ${
+            animate={{
+              opacity: isAutoAdvancing && value === num ? [1, 0.4, 1, 0.4, 1] : 1,
+              scale: 1
+            }}
+            transition={{
+              delay: index * 0.05,
+              opacity: { duration: 0.3, ease: "easeInOut" }
+            }}
+            className={`w-full sm:w-auto sm:flex-1 px-4 py-3 border-2 rounded-lg transition-default hover:scale-105 ${
               value === num
                 ? 'border-primary bg-primary text-white'
                 : 'border-border hover:border-primary'
@@ -33,12 +59,6 @@ export default function LikertScale({ question, value, onChange, onSubmit }) {
           </motion.button>
         ))}
       </div>
-      {labels.length > 0 && (
-        <div className="mt-6 flex justify-between text-sm text-textSecondary">
-          <span>{labels[0]}</span>
-          <span>{labels[labels.length - 1]}</span>
-        </div>
-      )}
     </div>
   );
 }

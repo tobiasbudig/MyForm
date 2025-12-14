@@ -7,6 +7,9 @@ dev:
 dev-d:
 	docker compose -f docker-compose.dev.yml up --build -d
 
+install-npm:
+	cd server && npm i && cd .. && cd client && npm i && cd ..
+
 # Production
 prod:
 	docker compose up --build -d

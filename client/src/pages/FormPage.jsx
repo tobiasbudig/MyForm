@@ -176,9 +176,6 @@ export default function FormPage() {
             }
             nextDisabled={currentQuestion.required && !answers[currentQuestion.id]}
           />
-          <div className="text-sm text-textSecondary text-center mt-4 h-5">
-            {saving && 'Saving...'}
-          </div>
         </div>
       </div>
     </div>

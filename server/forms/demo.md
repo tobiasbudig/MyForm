@@ -12,7 +12,7 @@ thankYou:
 
 # How likely are you to recommend us?
 - type: nps
-- required: true
+- required: false
 - id: nps_score
 - help: "0 means not likely, 10 means very likely"
 
@@ -20,7 +20,7 @@ thankYou:
 
 # How satisfied are you with our service?
 - type: likert
-- required: true
+- required: false
 - id: satisfaction
 - scale: 5
 - labels:
@@ -48,7 +48,7 @@ thankYou:
 
 # What is your role?
 - type: single_choice
-- required: true
+- required: false
 - id: role
 - options:
   - Developer
