@@ -5,7 +5,7 @@ A self-hosted form builder with a React frontend and Node.js backend. Forms are 
 ## Features
 
 - **Modern UI**: Clean, Apple-like design with smooth animations
-- **6 Question Types**: Short text, long text, single choice, multiple choice, Likert scale, and NPS
+- **7 Question Types**: Short text, long text, single choice, multiple choice, Likert scale, NPS, and Grid
 - **Markdown Configuration**: Define questionnaires in simple markdown files
 - **Auto-save**: Answers are automatically saved as users progress
 - **Security**: Rate limiting, CSRF protection, input validation, secure admin authentication
@@ -245,6 +245,36 @@ Fixed 0-10 scale with color gradient.
 - required: true|false
 - id: unique_id
 ```
+
+### 7. Grid
+Multiple statements with single-choice options for each. Displays one statement at a time with progress indicators and navigation.
+
+```markdown
+# Question text
+- type: grid
+- required: true|false
+- id: unique_id
+- help: "Optional help text"
+- options:
+  - Strongly Disagree
+  - Disagree
+  - Neutral
+  - Agree
+  - Strongly Agree
+- statements:
+  - The product is easy to use
+  - The product meets my needs
+  - The product is reliable
+  - I would recommend this product
+```
+
+**Features:**
+- One statement displayed at a time with smooth transitions
+- Progress dots and counter (e.g., "2 / 4")
+- Auto-advances to next statement after selection
+- Previous/Next navigation buttons
+- Auto-submits after completing the last statement
+- Answers stored as JSON object: `{"statement_0": "Agree", "statement_1": "Neutral"}`
 
 ## Docker Commands
 
