@@ -36,7 +36,7 @@ export default function QuestionCard({
   if (!QuestionComponent) {
     return (
       <div className="text-error">
-        Unknown question type: {question.type}
+        Unbekannter Fragetyp: {question.type}
       </div>
     );
   }
@@ -50,7 +50,7 @@ export default function QuestionCard({
       className="w-full max-w-2xl mx-auto px-6"
     >
       <div className="mb-4 text-sm text-textSecondary">
-        Question {questionNumber} of {totalQuestions}
+        Frage {questionNumber} von {totalQuestions}
       </div>
 
       <h2 className="text-3xl font-semibold text-textPrimary mb-2 flex items-center gap-2">
@@ -63,7 +63,7 @@ export default function QuestionCard({
             type="button"
             onClick={() => setShowExplanation(true)}
             className="text-textSecondary hover:text-primary transition-default"
-            aria-label="Show explanation"
+            aria-label="Erklärung anzeigen"
           >
             <HelpCircle size={24} />
           </button>
@@ -88,7 +88,7 @@ export default function QuestionCard({
       <Modal
         isOpen={showExplanation}
         onClose={() => setShowExplanation(false)}
-        title="Explanation"
+        title="Erklärung"
       >
         <p className="text-textPrimary">{question.explanation}</p>
       </Modal>

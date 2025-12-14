@@ -18,7 +18,7 @@ export default function CommentInput({ value, onChange, maxLength = 500 }) {
       >
         <MessageSquare size={20} />
         <span className="text-sm">
-          {isExpanded ? 'Hide comment' : 'Add comment (optional)'}
+          {isExpanded ? 'Kommentar ausblenden' : 'Kommentar hinzufügen (optional)'}
         </span>
       </button>
 
@@ -34,7 +34,7 @@ export default function CommentInput({ value, onChange, maxLength = 500 }) {
             <textarea
               value={value || ''}
               onChange={(e) => onChange(e.target.value)}
-              placeholder="Add any additional thoughts or context..."
+              placeholder="Zusätzliche Gedanken oder Kontext hinzufügen..."
               maxLength={maxLength}
               rows={3}
               className="w-full mt-3 px-4 py-3 text-base border-2 border-border rounded-lg focus:border-primary focus:outline-none transition-default resize-none"

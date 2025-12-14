@@ -47,7 +47,7 @@ export default function AdminFormView() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (err) {
-      alert('Failed to export CSV');
+      alert('CSV-Export fehlgeschlagen');
     }
   };
 
@@ -75,7 +75,7 @@ export default function AdminFormView() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-textSecondary">Loading...</div>
+        <div className="text-xl text-textSecondary">Lädt...</div>
       </div>
     );
   }
@@ -83,7 +83,7 @@ export default function AdminFormView() {
   if (!data) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl text-textSecondary">Form not found</div>
+        <div className="text-xl text-textSecondary">Formular nicht gefunden</div>
       </div>
     );
   }
@@ -93,7 +93,7 @@ export default function AdminFormView() {
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="mb-8">
           <Link to="/admin/dashboard" className="text-primary hover:underline mb-4 inline-block">
-            ← Back to Dashboard
+            ← Zurück zum Dashboard
           </Link>
           <div className="flex items-center justify-between">
             <h1 className="text-4xl font-bold">{data.form.title}</h1>
@@ -101,14 +101,14 @@ export default function AdminFormView() {
               onClick={handleExportCSV}
               className="px-6 py-2 bg-success text-white rounded-lg hover:bg-green-700 transition-default"
             >
-              Export CSV
+              CSV exportieren
             </button>
           </div>
         </div>
 
         {data.submissions.length === 0 ? (
           <div className="bg-white p-12 rounded-lg text-center">
-            <p className="text-textSecondary">No submissions yet</p>
+            <p className="text-textSecondary">Noch keine Einreichungen</p>
           </div>
         ) : (
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -117,22 +117,22 @@ export default function AdminFormView() {
                 <thead className="bg-gray-50 border-b border-gray-200">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-textSecondary uppercase tracking-wider">
-                      Submission ID
+                      Einreichungs-ID
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-textSecondary uppercase tracking-wider">
-                      IP Address
+                      IP-Adresse
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-textSecondary uppercase tracking-wider">
-                      Started
+                      Gestartet
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-textSecondary uppercase tracking-wider">
-                      Completed
+                      Abgeschlossen
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-textSecondary uppercase tracking-wider">
                       Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-textSecondary uppercase tracking-wider">
-                      Actions
+                      Aktionen
                     </th>
                   </tr>
                 </thead>
@@ -160,7 +160,7 @@ export default function AdminFormView() {
                                 : 'bg-yellow-100 text-yellow-800'
                             }`}
                           >
-                            {submission.is_complete ? 'Complete' : 'Incomplete'}
+                            {submission.is_complete ? 'Abgeschlossen' : 'Unvollständig'}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -168,7 +168,7 @@ export default function AdminFormView() {
                             onClick={() => toggleRow(submission.id)}
                             className="text-primary hover:underline"
                           >
-                            {expandedRows.has(submission.id) ? 'Hide' : 'View'} Details
+                            {expandedRows.has(submission.id) ? 'Ausblenden' : 'Anzeigen'} Details
                           </button>
                         </td>
                       </tr>
@@ -176,9 +176,9 @@ export default function AdminFormView() {
                         <tr>
                           <td colSpan="6" className="px-6 py-4 bg-gray-50">
                             <div className="space-y-4">
-                              <h4 className="font-semibold text-textPrimary mb-2">Answers:</h4>
+                              <h4 className="font-semibold text-textPrimary mb-2">Antworten:</h4>
                               {submission.answers.length === 0 ? (
-                                <p className="text-textSecondary text-sm">No answers recorded</p>
+                                <p className="text-textSecondary text-sm">Keine Antworten aufgezeichnet</p>
                               ) : (
                                 <div className="space-y-3">
                                   {submission.answers.map((answer, idx) => (

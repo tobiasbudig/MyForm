@@ -5,7 +5,7 @@ export default function OtherInput({
   value,
   onChange,
   onSubmit,
-  placeholder = 'Please specify...',
+  placeholder = 'Bitte angeben...',
   maxLength = 200,
   show = true,
 }) {

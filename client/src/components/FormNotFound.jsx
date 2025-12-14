@@ -11,16 +11,16 @@ export default function FormNotFound() {
       <div className="max-w-md text-center">
         <h1 className="text-6xl font-bold text-textPrimary mb-4">404</h1>
         <h2 className="text-2xl font-semibold text-textPrimary mb-4">
-          Form Not Found
+          Formular nicht gefunden
         </h2>
         <p className="text-textSecondary mb-8">
-          The questionnaire you're looking for doesn't exist.
+          Das gesuchte Formular existiert nicht.
         </p>
         <Link
           to="/form/demo"
           className="inline-block px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-hover transition-default"
         >
-          Try Demo Form
+          Demo-Formular ausprobieren
         </Link>
       </div>
     </motion.div>

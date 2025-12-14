@@ -19,15 +19,15 @@ export default function AdminLogin() {
         sessionStorage.setItem('adminToken', response.token);
         navigate('/admin/dashboard');
       } else {
-        setError('Invalid password');
+        setError('Ungültiges Passwort');
       }
     } catch (err) {
       if (err.response?.status === 401) {
-        setError('Invalid password');
+        setError('Ungültiges Passwort');
       } else if (err.response?.status === 429) {
-        setError('Too many login attempts. Please try again later.');
+        setError('Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.');
       } else {
-        setError('Login failed. Please try again.');
+        setError('Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.');
       }
     } finally {
       setLoading(false);
@@ -37,11 +37,11 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen flex items-center justify-center px-6 bg-surface">
       <div className="w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-8">Admin Login</h1>
+        <h1 className="text-3xl font-bold text-center mb-8">Admin-Anmeldung</h1>
         <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg">
           <div className="mb-6">
             <label htmlFor="password" className="block text-sm font-medium text-textSecondary mb-2">
-              Password
+              Passwort
             </label>
             <input
               type="password"
@@ -62,7 +62,7 @@ export default function AdminLogin() {
             disabled={loading}
             className="w-full px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary-hover disabled:opacity-50 transition-default"
           >
-            {loading ? 'Logging in...' : 'Access Admin Panel'}
+            {loading ? 'Wird angemeldet...' : 'Zum Admin-Bereich'}
           </button>
         </form>
       </div>

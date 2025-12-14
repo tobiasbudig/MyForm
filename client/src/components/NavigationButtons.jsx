@@ -4,7 +4,7 @@ export default function NavigationButtons({
   onSkip,
   canGoBack,
   canSkip,
-  nextLabel = 'Next',
+  nextLabel = 'Weiter',
   nextDisabled = false,
 }) {
   return (
@@ -16,7 +16,7 @@ export default function NavigationButtons({
             onClick={onBack}
             className="px-6 py-3 text-textSecondary hover:text-textPrimary transition-default"
           >
-            ← Back
+            ← Zurück
           </button>
         )}
       </div>
@@ -28,7 +28,7 @@ export default function NavigationButtons({
             onClick={onSkip}
             className="px-4 py-2 text-sm text-textSecondary hover:text-textPrimary transition-default"
           >
-            Skip
+            Überspringen
           </button>
         )}
         <button

@@ -13,6 +13,9 @@ export default function SingleChoice({ question, value, onChange, onSubmit, comm
   const displayOptions = question.has_other
     ? [...(question.options || []), 'Other']
     : question.options || [];
+  
+  // Map display text for translation
+  const getDisplayText = (option) => option === 'Other' ? 'Sonstiges' : option;
 
   // Initialize "Other" state from existing value
   useEffect(() => {
@@ -98,7 +101,7 @@ export default function SingleChoice({ question, value, onChange, onSubmit, comm
                 : 'border-border hover:border-primary-light'
             }`}
           >
-            <span className="text-lg">{option}</span>
+            <span className="text-lg">{getDisplayText(option)}</span>
           </motion.button>
         );
       })}

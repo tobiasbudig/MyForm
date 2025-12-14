@@ -11,6 +11,9 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
   const displayOptions = question.has_other
     ? [...(question.options || []), 'Other']
     : question.options || [];
+  
+  // Map display text for translation
+  const getDisplayText = (option) => option === 'Other' ? 'Sonstiges' : option;
 
   // Check if "Other" is selected (can be "Other" or "Other: custom text")
   const isOtherSelected = selected.some(item =>
@@ -107,7 +110,7 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
                   </svg>
                 )}
               </div>
-              <span className="text-base sm:text-lg">{option}</span>
+              <span className="text-base sm:text-lg">{getDisplayText(option)}</span>
             </div>
           </motion.button>
         );
@@ -123,7 +126,7 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
 
       {selected.length > 0 && (
         <div className="mt-4 text-sm text-textSecondary">
-          {selected.length} selected
+          {selected.length} ausgewählt
         </div>
       )}
       <CommentInput value={comment} onChange={onCommentChange} />

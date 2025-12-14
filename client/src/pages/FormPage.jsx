@@ -69,20 +69,17 @@ export default function FormPage() {
 
     // Invalid dependency ID = hide question (fail-safe)
     if (!dependencyQuestion) {
-      console.warn(`Question "${question.id}" depends on non-existent question "${question.depends_on}"`);
       return false;
     }
 
     // No answer to dependency = hide dependent question
     const dependencyAnswer = answers[question.depends_on];
     if (dependencyAnswer === undefined || dependencyAnswer === null || dependencyAnswer === '') {
-      console.log(`[Visibility] Question "${question.id}" hidden - no answer for "${question.depends_on}"`);
       return false;
     }
 
     // Match logic based on dependency question type
     const result = matchesCondition(dependencyQuestion.type, dependencyAnswer, question.show_when);
-    console.log(`[Visibility] Question "${question.id}": depends_on="${question.depends_on}", answer="${dependencyAnswer}", show_when="${question.show_when}", visible=${result}`);
     return result;
   }, [matchesCondition]);
 
@@ -119,7 +116,6 @@ export default function FormPage() {
           setError('Form not found');
         }
       } catch (err) {
-        console.error('Error loading form:', err);
         setError('Form not found');
       } finally {
         setLoading(false);
@@ -135,7 +131,6 @@ export default function FormPage() {
 
     const detectCircular = (questionId, visited = new Set(), path = []) => {
       if (visited.has(questionId)) {
-        console.error('Circular dependency detected:', [...path, questionId].join(' -> '));
         return true;
       }
 
@@ -164,8 +159,7 @@ export default function FormPage() {
         setCurrentIndex(0);
       }
     } catch (err) {
-      console.error('Error starting submission:', err);
-      alert('Failed to start survey. Please try again.');
+      alert('Umfrage konnte nicht gestartet werden. Bitte versuchen Sie es erneut.');
     }
   };
 
@@ -191,7 +185,7 @@ export default function FormPage() {
             csrfToken
           );
         } catch (err) {
-          console.error('Error saving comment:', err);
+          // Error saving comment
         } finally {
           setSaving(false);
         }
@@ -212,7 +206,7 @@ export default function FormPage() {
         const comment = comments[questionId] || null;
         await saveAnswer(submissionId, questionId, questionText, value, comment, csrfToken);
       } catch (err) {
-        console.error('Error saving answer:', err);
+        // Error saving answer
       } finally {
         setSaving(false);
       }
@@ -223,13 +217,9 @@ export default function FormPage() {
   // Find next visible question index
   const getNextVisibleIndex = useCallback((currentIdx) => {
     const latestAnswers = answersRef.current; // Use ref for synchronous access
-    console.log('[getNextVisibleIndex] Current answers:', JSON.stringify(latestAnswers));
     for (let i = currentIdx + 1; i < form.questions.length; i++) {
       const question = form.questions[i];
       const visible = isQuestionVisible(question, latestAnswers, form.questions);
-      if (question.depends_on) {
-        console.log(`[getNextVisibleIndex] Question ${i} (${question.id}): depends_on="${question.depends_on}", answer="${latestAnswers[question.depends_on]}", visible=${visible}`);
-      }
       if (visible) {
         return i;
       }
@@ -271,15 +261,11 @@ export default function FormPage() {
 
     // Validation
     if (currentQuestion.required && !answers[currentQuestion.id]) {
-      alert('This question is required');
+      alert('Diese Frage ist erforderlich');
       return;
     }
 
     const nextIndex = getNextVisibleIndex(currentIndex);
-    console.log(`[Navigation] Current index: ${currentIndex} (${currentQuestion.id}), Next visible index: ${nextIndex}, Total questions: ${form.questions.length}`);
-    if (nextIndex < form.questions.length) {
-      console.log(`[Navigation] Moving to question: ${form.questions[nextIndex].id} - "${form.questions[nextIndex].text}"`);
-    }
 
     if (nextIndex >= form.questions.length) {
       await handleComplete();
@@ -306,8 +292,7 @@ export default function FormPage() {
       await completeSubmission(submissionId, csrfToken);
       setCurrentIndex(form.questions.length); // Move to thank you screen
     } catch (err) {
-      console.error('Error completing submission:', err);
-      alert('Failed to submit survey. Please try again.');
+      alert('Umfrage konnte nicht übermittelt werden. Bitte versuchen Sie es erneut.');
     }
   };
 
@@ -315,7 +300,7 @@ export default function FormPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-xl text-textSecondary">Loading...</div>
+        <div className="text-xl text-textSecondary">Lädt...</div>
       </div>
     );
   }
@@ -372,7 +357,7 @@ export default function FormPage() {
             canGoBack={currentIndex > 0}
             canSkip={!currentQuestion.required}
             nextLabel={
-              currentIndex === form.questions.length - 1 ? 'Submit' : 'Next'
+              currentIndex === form.questions.length - 1 ? 'Absenden' : 'Weiter'
             }
             nextDisabled={currentQuestion.required && !answers[currentQuestion.id]}
           />
