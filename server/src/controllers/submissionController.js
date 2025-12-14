@@ -68,7 +68,7 @@ async function startSubmission(req, res) {
 async function saveAnswer(req, res) {
   try {
     const { submissionId } = req.params;
-    const { questionId, questionText, value } = req.body;
+    const { questionId, questionText, value, comment } = req.body;
 
     if (!questionId || value === undefined || value === null) {
       return res.status(400).json({
@@ -93,18 +93,7 @@ async function saveAnswer(req, res) {
     // Convert value to string for storage
     const valueStr = typeof value === 'object' ? JSON.stringify(value) : String(value);
 
-    // Upsert answer (update if exists, insert if not)
-    await db.query(
-      `INSERT INTO answers (submission_id, question_id, question_text, answer_value)
-       VALUES ($1, $2, $3, $4)
-       ON CONFLICT ON CONSTRAINT answers_pkey
-       DO UPDATE SET answer_value = $4, answered_at = NOW()
-       WHERE answers.submission_id = $1 AND answers.question_id = $2
-       RETURNING id`,
-      [submissionId, questionId, questionText, valueStr]
-    );
-
-    // If answer already exists for this question, update it
+    // Check if answer already exists for this question
     const checkExisting = await db.query(
       'SELECT id FROM answers WHERE submission_id = $1 AND question_id = $2',
       [submissionId, questionId]
@@ -114,22 +103,23 @@ async function saveAnswer(req, res) {
       // Update existing answer
       await db.query(
         `UPDATE answers
-         SET answer_value = $1, answered_at = NOW()
-         WHERE submission_id = $2 AND question_id = $3`,
-        [valueStr, submissionId, questionId]
+         SET answer_value = $1, comment = $2, answered_at = NOW()
+         WHERE submission_id = $3 AND question_id = $4`,
+        [valueStr, comment || null, submissionId, questionId]
       );
     } else {
       // Insert new answer
       await db.query(
-        `INSERT INTO answers (submission_id, question_id, question_text, answer_value)
-         VALUES ($1, $2, $3, $4)`,
-        [submissionId, questionId, questionText, valueStr]
+        `INSERT INTO answers (submission_id, question_id, question_text, answer_value, comment)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [submissionId, questionId, questionText, valueStr, comment || null]
       );
     }
 
     logger.debug('Answer saved', {
       submissionId,
       questionId,
+      hasComment: !!comment,
     });
 
     res.json({

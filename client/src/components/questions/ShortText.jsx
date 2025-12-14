@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
+import CommentInput from '../CommentInput';
 
-export default function ShortText({ question, value, onChange, onSubmit }) {
+export default function ShortText({ question, value, onChange, onSubmit, comment, onCommentChange }) {
   const inputRef = useRef(null);
   const maxLength = question.maxLength || 200;
 
@@ -30,6 +31,7 @@ export default function ShortText({ question, value, onChange, onSubmit }) {
       <div className="mt-2 text-sm text-textSecondary text-right">
         {(value || '').length} / {maxLength}
       </div>
+      <CommentInput value={comment} onChange={onCommentChange} />
     </div>
   );
 }

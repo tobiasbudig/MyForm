@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import CommentInput from '../CommentInput';
 
-export default function NPS({ question, value, onChange, onSubmit }) {
+export default function NPS({ question, value, onChange, onSubmit, comment, onCommentChange }) {
   const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
   const timeoutRef = useRef(null);
 
@@ -59,6 +60,7 @@ export default function NPS({ question, value, onChange, onSubmit }) {
           </motion.button>
         ))}
       </div>
+      <CommentInput value={comment} onChange={onCommentChange} />
     </div>
   );
 }

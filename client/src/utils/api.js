@@ -44,16 +44,18 @@ export async function startSubmission(formId) {
  * @param {string} questionId - The question ID
  * @param {string} questionText - The question text
  * @param {any} value - The answer value
+ * @param {string} comment - Optional comment
  * @param {string} csrfToken - CSRF token
  * @returns {Promise<Object>} Response
  */
-export async function saveAnswer(submissionId, questionId, questionText, value, csrfToken) {
+export async function saveAnswer(submissionId, questionId, questionText, value, comment, csrfToken) {
   const response = await api.post(
     `/submissions/${submissionId}/answer`,
     {
       questionId,
       questionText,
       value,
+      comment,
     },
     {
       headers: {

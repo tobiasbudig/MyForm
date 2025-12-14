@@ -1,20 +1,77 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import CommentInput from '../CommentInput';
+import OtherInput from '../OtherInput';
 
-export default function MultipleChoice({ question, value, onChange }) {
+export default function MultipleChoice({ question, value, onChange, comment, onCommentChange }) {
   const selected = Array.isArray(value) ? value : [];
+  const [otherText, setOtherText] = useState('');
+
+  // Create display options (add "Other" if has_other is true)
+  const displayOptions = question.has_other
+    ? [...(question.options || []), 'Other']
+    : question.options || [];
+
+  // Check if "Other" is selected (can be "Other" or "Other: custom text")
+  const isOtherSelected = selected.some(item =>
+    item === 'Other' || item.startsWith('Other: ')
+  );
+
+  // Extract custom text if exists
+  const otherValue = selected.find(item => item.startsWith('Other: '));
+  const extractedText = otherValue ? otherValue.replace('Other: ', '') : '';
+
+  // Initialize otherText from existing value
+  useEffect(() => {
+    if (extractedText) {
+      setOtherText(extractedText);
+    }
+  }, [extractedText]);
 
   const handleToggle = (option) => {
-    if (selected.includes(option)) {
-      onChange(selected.filter((item) => item !== option));
+    if (option === 'Other') {
+      if (isOtherSelected) {
+        // Remove all "Other: ..." entries
+        const filtered = selected.filter(item =>
+          item !== 'Other' && !item.startsWith('Other: ')
+        );
+        onChange(filtered);
+        setOtherText('');
+      } else {
+        // Add placeholder "Other"
+        onChange([...selected, 'Other']);
+      }
     } else {
-      onChange([...selected, option]);
+      // Normal toggle logic
+      if (selected.includes(option)) {
+        onChange(selected.filter((item) => item !== option));
+      } else {
+        onChange([...selected, option]);
+      }
+    }
+  };
+
+  const handleOtherTextChange = (text) => {
+    setOtherText(text);
+
+    // Replace "Other" or "Other: ..." with new custom text
+    const filtered = selected.filter(item =>
+      item !== 'Other' && !item.startsWith('Other: ')
+    );
+
+    if (text.trim()) {
+      onChange([...filtered, `Other: ${text.trim()}`]);
+    } else {
+      onChange([...filtered, 'Other']);
     }
   };
 
   return (
     <div className="w-full space-y-3">
-      {question.options?.map((option, index) => {
-        const isSelected = selected.includes(option);
+      {displayOptions.map((option, index) => {
+        const isSelected = option === 'Other'
+          ? isOtherSelected
+          : selected.includes(option);
 
         return (
           <motion.button
@@ -55,11 +112,21 @@ export default function MultipleChoice({ question, value, onChange }) {
           </motion.button>
         );
       })}
+
+      {isOtherSelected && (
+        <OtherInput
+          value={otherText}
+          onChange={handleOtherTextChange}
+          show={isOtherSelected}
+        />
+      )}
+
       {selected.length > 0 && (
         <div className="mt-4 text-sm text-textSecondary">
           {selected.length} selected
         </div>
       )}
+      <CommentInput value={comment} onChange={onCommentChange} />
     </div>
   );
 }

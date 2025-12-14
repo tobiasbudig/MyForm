@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import CommentInput from '../CommentInput';
 
-export default function LikertScale({ question, value, onChange, onSubmit }) {
+export default function LikertScale({ question, value, onChange, onSubmit, comment, onCommentChange }) {
   const scale = question.scale || 5;
   const labels = question.labels || [];
   const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
@@ -59,6 +60,7 @@ export default function LikertScale({ question, value, onChange, onSubmit }) {
           </motion.button>
         ))}
       </div>
+      <CommentInput value={comment} onChange={onCommentChange} />
     </div>
   );
 }

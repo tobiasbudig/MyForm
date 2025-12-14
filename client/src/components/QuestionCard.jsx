@@ -1,10 +1,13 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { HelpCircle } from 'lucide-react';
 import ShortText from './questions/ShortText';
 import LongText from './questions/LongText';
 import SingleChoice from './questions/SingleChoice';
 import MultipleChoice from './questions/MultipleChoice';
 import LikertScale from './questions/LikertScale';
 import NPS from './questions/NPS';
+import Modal from './Modal';
 
 const questionComponents = {
   short_text: ShortText,
@@ -22,7 +25,10 @@ export default function QuestionCard({
   value,
   onChange,
   onSubmit,
+  comment,
+  onCommentChange,
 }) {
+  const [showExplanation, setShowExplanation] = useState(false);
   const QuestionComponent = questionComponents[question.type];
 
   if (!QuestionComponent) {
@@ -45,9 +51,21 @@ export default function QuestionCard({
         Question {questionNumber} of {totalQuestions}
       </div>
 
-      <h2 className="text-3xl font-semibold text-textPrimary mb-2">
-        {question.text}
-        {question.required && <span className="text-error ml-1">*</span>}
+      <h2 className="text-3xl font-semibold text-textPrimary mb-2 flex items-center gap-2">
+        <span>
+          {question.text}
+          {question.required && <span className="text-error ml-1">*</span>}
+        </span>
+        {question.explanation && (
+          <button
+            type="button"
+            onClick={() => setShowExplanation(true)}
+            className="text-textSecondary hover:text-primary transition-default"
+            aria-label="Show explanation"
+          >
+            <HelpCircle size={24} />
+          </button>
+        )}
       </h2>
 
       {question.help && (
@@ -60,8 +78,18 @@ export default function QuestionCard({
           value={value}
           onChange={onChange}
           onSubmit={onSubmit}
+          comment={comment}
+          onCommentChange={onCommentChange}
         />
       </div>
+
+      <Modal
+        isOpen={showExplanation}
+        onClose={() => setShowExplanation(false)}
+        title="Explanation"
+      >
+        <p className="text-textPrimary">{question.explanation}</p>
+      </Modal>
     </motion.div>
   );
 }

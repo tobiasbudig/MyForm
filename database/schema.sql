@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS answers (
     question_id VARCHAR(255) NOT NULL,
     question_text TEXT,
     answer_value TEXT,
+    comment TEXT,
     answered_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

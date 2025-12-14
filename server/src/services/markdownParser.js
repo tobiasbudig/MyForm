@@ -89,6 +89,10 @@ function parseQuestionBlock(block, index) {
         metadata.required = line.split(':')[1].trim() === 'true';
         isParsingOptions = false;
         isParsingLabels = false;
+      } else if (line.startsWith('- has_other:')) {
+        metadata.has_other = line.split(':')[1].trim() === 'true';
+        isParsingOptions = false;
+        isParsingLabels = false;
       } else if (line.startsWith('- id:')) {
         metadata.id = line.split(':')[1].trim();
         isParsingOptions = false;
@@ -99,6 +103,10 @@ function parseQuestionBlock(block, index) {
         isParsingLabels = false;
       } else if (line.startsWith('- help:')) {
         metadata.help = line.split(':', 2)[1].trim();
+        isParsingOptions = false;
+        isParsingLabels = false;
+      } else if (line.startsWith('- explanation:')) {
+        metadata.explanation = line.split(':', 2)[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
       } else if (line.startsWith('- maxLength:')) {
@@ -141,6 +149,8 @@ function parseQuestionBlock(block, index) {
     // Add type-specific metadata
     if (metadata.placeholder) question.placeholder = metadata.placeholder;
     if (metadata.help) question.help = metadata.help;
+    if (metadata.explanation) question.explanation = metadata.explanation;
+    if (metadata.has_other !== undefined) question.has_other = metadata.has_other;
     if (metadata.maxLength) question.maxLength = metadata.maxLength;
     if (metadata.scale) question.scale = metadata.scale;
     if (metadata.options) question.options = metadata.options;

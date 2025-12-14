@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
+import CommentInput from '../CommentInput';
 
-export default function LongText({ question, value, onChange, onSubmit }) {
+export default function LongText({ question, value, onChange, onSubmit, comment, onCommentChange }) {
   const textareaRef = useRef(null);
   const maxLength = question.maxLength || 2000;
 
@@ -33,6 +34,7 @@ export default function LongText({ question, value, onChange, onSubmit }) {
       <div className="mt-2 text-sm text-textSecondary">
         Press Cmd/Ctrl + Enter to submit
       </div>
+      <CommentInput value={comment} onChange={onCommentChange} />
     </div>
   );
 }

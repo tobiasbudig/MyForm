@@ -16,6 +16,7 @@ export default function FormPage() {
   const [csrfToken, setCsrfToken] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(-1); // -1 = welcome screen
   const [answers, setAnswers] = useState({});
+  const [comments, setComments] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -57,6 +58,37 @@ export default function FormPage() {
     }
   };
 
+  // Handle comment change (with auto-save)
+  const handleCommentChange = useCallback(
+    async (questionId, commentText) => {
+      setComments((prev) => ({ ...prev, [questionId]: commentText }));
+
+      // Auto-save comment if we have an answer for this question
+      if (!submissionId || !csrfToken) return;
+
+      const questionAnswer = answers[questionId];
+      if (questionAnswer !== undefined) {
+        try {
+          setSaving(true);
+          const currentQuestion = form.questions.find((q) => q.id === questionId);
+          await saveAnswer(
+            submissionId,
+            questionId,
+            currentQuestion?.text || '',
+            questionAnswer,
+            commentText || null,
+            csrfToken
+          );
+        } catch (err) {
+          console.error('Error saving comment:', err);
+        } finally {
+          setSaving(false);
+        }
+      }
+    },
+    [submissionId, csrfToken, answers, form]
+  );
+
   // Auto-save answer (debounced)
   const handleAnswerChange = useCallback(
     async (questionId, questionText, value) => {
@@ -66,14 +98,15 @@ export default function FormPage() {
 
       try {
         setSaving(true);
-        await saveAnswer(submissionId, questionId, questionText, value, csrfToken);
+        const comment = comments[questionId] || null;
+        await saveAnswer(submissionId, questionId, questionText, value, comment, csrfToken);
       } catch (err) {
         console.error('Error saving answer:', err);
       } finally {
         setSaving(false);
       }
     },
-    [submissionId, csrfToken]
+    [submissionId, csrfToken, comments]
   );
 
   // Navigate to next question
@@ -161,6 +194,10 @@ export default function FormPage() {
               handleAnswerChange(currentQuestion.id, currentQuestion.text, value)
             }
             onSubmit={handleNext}
+            comment={comments[currentQuestion.id]}
+            onCommentChange={(commentText) =>
+              handleCommentChange(currentQuestion.id, commentText)
+            }
           />
         </AnimatePresence>
 

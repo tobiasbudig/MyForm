@@ -1,9 +1,27 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import CommentInput from '../CommentInput';
+import OtherInput from '../OtherInput';
 
-export default function SingleChoice({ question, value, onChange, onSubmit }) {
+export default function SingleChoice({ question, value, onChange, onSubmit, comment, onCommentChange }) {
   const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
+  const [showOtherInput, setShowOtherInput] = useState(false);
+  const [otherText, setOtherText] = useState('');
   const timeoutRef = useRef(null);
+
+  // Create display options (add "Other" if has_other is true)
+  const displayOptions = question.has_other
+    ? [...(question.options || []), 'Other']
+    : question.options || [];
+
+  // Initialize "Other" state from existing value
+  useEffect(() => {
+    if (value && !question.options?.includes(value) && question.has_other) {
+      // Value is custom "Other" text
+      setShowOtherInput(true);
+      setOtherText(value);
+    }
+  }, [value, question.options, question.has_other]);
 
   const handleSelect = (option) => {
     // Clear any existing timeout (handles rapid clicking)
@@ -11,12 +29,35 @@ export default function SingleChoice({ question, value, onChange, onSubmit }) {
       clearTimeout(timeoutRef.current);
     }
 
-    onChange(option);
-    setIsAutoAdvancing(true);
+    if (option === 'Other') {
+      // Show "Other" input, don't auto-advance yet
+      setShowOtherInput(true);
+      onChange(''); // Clear value temporarily
+    } else {
+      // Normal option selected
+      setShowOtherInput(false);
+      setOtherText('');
+      onChange(option);
+      setIsAutoAdvancing(true);
 
-    timeoutRef.current = setTimeout(() => {
-      onSubmit();
-    }, 300);
+      timeoutRef.current = setTimeout(() => {
+        onSubmit();
+      }, 300);
+    }
+  };
+
+  const handleOtherChange = (text) => {
+    setOtherText(text);
+    onChange(text); // Store custom text as value
+  };
+
+  const handleOtherSubmit = () => {
+    if (otherText.trim()) {
+      setIsAutoAdvancing(true);
+      timeoutRef.current = setTimeout(() => {
+        onSubmit();
+      }, 300);
+    }
   };
 
   useEffect(() => {
@@ -27,31 +68,51 @@ export default function SingleChoice({ question, value, onChange, onSubmit }) {
     };
   }, []);
 
+  // Check if current value is for "Other" option
+  const isOtherSelected = showOtherInput || (value && !question.options?.includes(value));
+
   return (
     <div className="w-full space-y-3">
-      {question.options?.map((option, index) => (
-        <motion.button
-          key={option}
-          type="button"
-          onClick={() => handleSelect(option)}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{
-            opacity: isAutoAdvancing && value === option ? [1, 0.4, 1, 0.4, 1] : 1,
-            y: 0
-          }}
-          transition={{
-            delay: index * 0.05,
-            opacity: { duration: 0.3, ease: "easeInOut" }
-          }}
-          className={`w-full px-6 py-4 text-left border-2 rounded-lg transition-default hover:scale-[1.01] ${
-            value === option
-              ? 'border-primary bg-primary-50 text-primary'
-              : 'border-border hover:border-primary-light'
-          }`}
-        >
-          <span className="text-lg">{option}</span>
-        </motion.button>
-      ))}
+      {displayOptions.map((option, index) => {
+        const isSelected = option === 'Other'
+          ? isOtherSelected
+          : value === option;
+
+        return (
+          <motion.button
+            key={option}
+            type="button"
+            onClick={() => handleSelect(option)}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{
+              opacity: isAutoAdvancing && isSelected ? [1, 0.4, 1, 0.4, 1] : 1,
+              y: 0
+            }}
+            transition={{
+              delay: index * 0.05,
+              opacity: { duration: 0.3, ease: "easeInOut" }
+            }}
+            className={`w-full px-6 py-4 text-left border-2 rounded-lg transition-default hover:scale-[1.01] ${
+              isSelected
+                ? 'border-primary bg-primary-50 text-primary'
+                : 'border-border hover:border-primary-light'
+            }`}
+          >
+            <span className="text-lg">{option}</span>
+          </motion.button>
+        );
+      })}
+
+      {showOtherInput && (
+        <OtherInput
+          value={otherText}
+          onChange={handleOtherChange}
+          onSubmit={handleOtherSubmit}
+          show={showOtherInput}
+        />
+      )}
+
+      <CommentInput value={comment} onChange={onCommentChange} />
     </div>
   );
 }

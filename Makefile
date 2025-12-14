@@ -1,4 +1,4 @@
-.PHONY: dev prod down logs db-shell clean rebuild db-reset help
+.PHONY: dev prod down logs db-shell clean rebuild db-reset db-migrate db-migrate-prod help install-npm
 
 # Development
 dev:
@@ -55,18 +55,43 @@ db-reset:
 	@sleep 5
 	docker compose -f docker-compose.dev.yml up -d
 
+# Migrate existing database (adds comment column)
+db-migrate:
+	@echo "Running database migration..."
+	docker compose -f docker-compose.dev.yml exec postgres psql -U myform -d myform_db -f /migrations/add_comment_column.sql
+	@echo "Migration complete!"
+
+# Migrate production database
+db-migrate-prod:
+	@echo "Running database migration on production..."
+	docker compose exec postgres psql -U myform -d myform_db -f /migrations/add_comment_column.sql
+	@echo "Migration complete!"
+
 # Help
 help:
 	@echo "Available commands:"
-	@echo "  make dev          - Start development environment"
-	@echo "  make dev-d        - Start development environment in detached mode"
-	@echo "  make prod         - Start production environment"
-	@echo "  make down         - Stop all containers"
-	@echo "  make logs         - View all logs"
-	@echo "  make logs-server  - View server logs"
-	@echo "  make logs-client  - View client logs"
-	@echo "  make logs-db      - View database logs"
-	@echo "  make db-shell     - Connect to database shell"
-	@echo "  make clean        - Remove all containers and volumes (deletes data!)"
-	@echo "  make rebuild      - Rebuild containers without cache"
-	@echo "  make db-reset     - Reset database with fresh schema"
+	@echo ""
+	@echo "Development:"
+	@echo "  make dev              - Start development environment"
+	@echo "  make dev-d            - Start development environment in detached mode"
+	@echo "  make install-npm      - Install npm dependencies for client and server"
+	@echo ""
+	@echo "Production:"
+	@echo "  make prod             - Start production environment"
+	@echo ""
+	@echo "Container Management:"
+	@echo "  make down             - Stop all containers"
+	@echo "  make rebuild          - Rebuild containers without cache"
+	@echo "  make clean            - Remove all containers and volumes (deletes data!)"
+	@echo ""
+	@echo "Logs:"
+	@echo "  make logs             - View all logs"
+	@echo "  make logs-server      - View server logs"
+	@echo "  make logs-client      - View client logs"
+	@echo "  make logs-db          - View database logs"
+	@echo ""
+	@echo "Database:"
+	@echo "  make db-shell         - Connect to database shell"
+	@echo "  make db-reset         - Reset database with fresh schema (deletes data!)"
+	@echo "  make db-migrate       - Migrate existing dev database (add comment column)"
+	@echo "  make db-migrate-prod  - Migrate existing prod database (add comment column)"

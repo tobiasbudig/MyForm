@@ -61,6 +61,11 @@ const submissionValidators = {
         }
         return true;
       }),
+    body('comment')
+      .optional()
+      .trim()
+      .isLength({ max: 500 })
+      .withMessage('comment must be less than 500 characters'),
     handleValidationErrors,
   ],
 };
