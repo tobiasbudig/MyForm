@@ -1,4 +1,4 @@
-.PHONY: dev prod down logs db-shell clean rebuild db-reset db-migrate db-migrate-prod help install-npm
+.PHONY: dev prod down logs db-shell clean rebuild db-reset db-migrate db-migrate-prod help install-npm impressum doctor-form mfa-form nurse-form participant-form
 
 # Development
 dev:
@@ -9,6 +9,23 @@ dev-d:
 
 install-npm:
 	cd server && npm i && cd .. && cd client && npm i && cd ..
+
+# Configuration
+impressum:
+	nano client/src/content/impressum.md
+
+# Forms
+doctor-form:
+	nano server/forms/doctor.md
+
+mfa-form:
+	nano server/forms/mfa.md
+
+nurse-form:
+	nano server/forms/nurse.md
+
+participant-form:
+	nano server/forms/participant.md
 
 # Production
 prod:
@@ -75,6 +92,15 @@ help:
 	@echo "  make dev              - Start development environment"
 	@echo "  make dev-d            - Start development environment in detached mode"
 	@echo "  make install-npm      - Install npm dependencies for client and server"
+	@echo ""
+	@echo "Configuration:"
+	@echo "  make impressum        - Edit impressum configuration"
+	@echo ""
+	@echo "Forms:"
+	@echo "  make doctor-form      - Edit doctor form"
+	@echo "  make mfa-form         - Edit MFA form"
+	@echo "  make nurse-form       - Edit nurse form"
+	@echo "  make participant-form - Edit participant form"
 	@echo ""
 	@echo "Production:"
 	@echo "  make prod             - Start production environment"

@@ -28,6 +28,18 @@ export default function HomePage() {
             >
               Für MFAs
             </Link>
+            <Link
+              to="/form/nurse"
+              className="px-12 py-4 bg-primary text-white text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg w-full sm:w-auto"
+            >
+              Für Pfleger
+            </Link>
+            <Link
+              to="/form/participant"
+              className="px-12 py-4 bg-primary text-white text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg w-full sm:w-auto"
+            >
+              Für andere Teilnehmer
+            </Link>
           </div>
         </div>
       </div>
