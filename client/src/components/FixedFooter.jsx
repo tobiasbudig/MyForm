@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 export default function FixedFooter() {
   return (
-    <div className="fixed bottom-0 left-0 p-6 z-10">
+    <div className="mt-auto p-6">
       <div className="flex items-center gap-3 text-sm text-textSecondary">
         <span>Sicher gehostet in der Schweiz 🇨🇭</span>
         <span>•</span>

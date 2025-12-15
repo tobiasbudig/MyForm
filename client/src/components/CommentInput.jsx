@@ -10,7 +10,7 @@ export default function CommentInput({ value, onChange, maxLength = 500 }) {
   };
 
   return (
-    <div className="mt-6">
+    <div className="mt-4">
       <button
         type="button"
         onClick={handleToggle}

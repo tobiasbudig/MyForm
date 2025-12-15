@@ -8,7 +8,7 @@ export default function NavigationButtons({
   nextDisabled = false,
 }) {
   return (
-    <div className="flex items-center justify-between gap-2 sm:gap-4 mt-8 w-full">
+    <div className="flex items-center justify-between gap-2 sm:gap-4 mt-2 w-full">
       <div className="flex-1 flex justify-start sm:justify-start">
         {canGoBack ? (
           <button

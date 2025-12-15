@@ -132,7 +132,7 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
           </div>
 
           {/* Navigation Buttons */}
-          <div className="flex gap-3 mt-6">
+          <div className="flex gap-3 mt-4">
             {currentStatementIndex > 0 && (
               <button
                 type="button"
