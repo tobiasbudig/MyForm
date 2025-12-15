@@ -78,6 +78,7 @@ function parseQuestionBlock(block, index) {
     let isParsingOptions = false;
     let isParsingLabels = false;
     let isParsingStatements = false;
+    let currentOption = null; // For hierarchical options
 
     for (let i = 0; i < lines.length; i++) {
       const originalLine = lines[i];
@@ -139,24 +140,73 @@ function parseQuestionBlock(block, index) {
         isParsingLabels = false;
         isParsingStatements = false;
       } else if (line.startsWith('- options:')) {
+        // Save any pending hierarchical option before switching context
+        if (currentOption) {
+          optionsList.push(currentOption);
+          currentOption = null;
+        }
         isParsingOptions = true;
         isParsingLabels = false;
         isParsingStatements = false;
       } else if (line.startsWith('- labels:')) {
+        // Save any pending hierarchical option before switching context
+        if (currentOption) {
+          optionsList.push(currentOption);
+          currentOption = null;
+        }
         isParsingLabels = true;
         isParsingOptions = false;
         isParsingStatements = false;
       } else if (line.startsWith('- statements:')) {
+        // Save any pending hierarchical option before switching context
+        if (currentOption) {
+          optionsList.push(currentOption);
+          currentOption = null;
+        }
         isParsingStatements = true;
         isParsingOptions = false;
         isParsingLabels = false;
       } else if (originalLine.startsWith('  - ') && isParsingOptions) {
-        optionsList.push(line.replace(/^-\s*/, '').trim());
+        const content = line.replace(/^-\s*/, '').trim();
+
+        // Check if this is a hierarchical option starting with "text:"
+        if (content.startsWith('text:')) {
+          // Save previous option if exists
+          if (currentOption) {
+            optionsList.push(currentOption);
+          }
+          // Start new hierarchical option
+          currentOption = {
+            text: content.replace('text:', '').trim()
+          };
+        } else if (content.includes(':') && !content.startsWith('text:')) {
+          // This is a simple string that happens to contain a colon (backward compatible)
+          if (currentOption) {
+            optionsList.push(currentOption);
+            currentOption = null;
+          }
+          optionsList.push(content);
+        } else {
+          // Simple string format (backward compatible)
+          if (currentOption) {
+            optionsList.push(currentOption);
+            currentOption = null;
+          }
+          optionsList.push(content);
+        }
+      } else if (originalLine.startsWith('    description:') && isParsingOptions && currentOption) {
+        // Add description to current hierarchical option
+        currentOption.description = line.replace('description:', '').trim();
       } else if (originalLine.startsWith('  - ') && isParsingLabels) {
         labelsList.push(line.replace(/^-\s*/, '').trim());
       } else if (originalLine.startsWith('  - ') && isParsingStatements) {
         statementsList.push(line.replace(/^-\s*/, '').trim());
       }
+    }
+
+    // Save any pending hierarchical option at the end
+    if (currentOption) {
+      optionsList.push(currentOption);
     }
 
     if (optionsList.length > 0) {

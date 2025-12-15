@@ -7,13 +7,32 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
   const selected = Array.isArray(value) ? value : [];
   const [otherText, setOtherText] = useState('');
 
+  // Normalize option to handle both string and object formats
+  const normalizeOption = (option) => {
+    if (typeof option === 'string') {
+      return { text: option, description: null };
+    }
+    return option;
+  };
+
   // Create display options (add "Other" if has_other is true)
   const displayOptions = question.has_other
     ? [...(question.options || []), 'Other']
     : question.options || [];
-  
+
   // Map display text for translation
-  const getDisplayText = (option) => option === 'Other' ? 'Sonstiges' : option;
+  const getDisplayText = (option) => {
+    if (option === 'Other') return 'Sonstiges';
+    const normalized = normalizeOption(option);
+    return normalized.text;
+  };
+
+  // Get option text for comparison
+  const getOptionText = (option) => {
+    if (option === 'Other') return 'Other';
+    const normalized = normalizeOption(option);
+    return normalized.text;
+  };
 
   // Check if "Other" is selected (can be "Other" or "Other: custom text")
   const isOtherSelected = selected.some(item =>
@@ -32,6 +51,8 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
   }, [extractedText]);
 
   const handleToggle = (option) => {
+    const optionText = getOptionText(option);
+
     if (option === 'Other') {
       if (isOtherSelected) {
         // Remove all "Other: ..." entries
@@ -45,11 +66,11 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
         onChange([...selected, 'Other']);
       }
     } else {
-      // Normal toggle logic
-      if (selected.includes(option)) {
-        onChange(selected.filter((item) => item !== option));
+      // Normal toggle logic - use option text
+      if (selected.includes(optionText)) {
+        onChange(selected.filter((item) => item !== optionText));
       } else {
-        onChange([...selected, option]);
+        onChange([...selected, optionText]);
       }
     }
   };
@@ -72,13 +93,14 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
   return (
     <div className="w-full space-y-3">
       {displayOptions.map((option, index) => {
+        const normalizedOption = normalizeOption(option);
         const isSelected = option === 'Other'
           ? isOtherSelected
-          : selected.includes(option);
+          : selected.includes(getOptionText(option));
 
         return (
           <motion.button
-            key={option}
+            key={typeof option === 'string' ? option : option.text}
             type="button"
             onClick={() => handleToggle(option)}
             initial={{ opacity: 0 }}
@@ -90,9 +112,9 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
                 : 'border-border hover:border-primary-light'
             }`}
           >
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-start gap-2 sm:gap-3">
               <div
-                className={`w-6 h-6 sm:w-5 sm:h-5 border-2 rounded flex items-center justify-center flex-shrink-0 ${
+                className={`w-6 h-6 sm:w-5 sm:h-5 border-2 rounded flex items-center justify-center flex-shrink-0 mt-0.5 ${
                   isSelected ? 'border-primary bg-primary' : 'border-gray-400'
                 }`}
               >
@@ -110,7 +132,14 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
                   </svg>
                 )}
               </div>
-              <span className="text-base sm:text-lg">{getDisplayText(option)}</span>
+              <div className="flex-1">
+                <span className="text-base sm:text-lg font-semibold block">{getDisplayText(option)}</span>
+                {normalizedOption.description && (
+                  <span className="text-sm text-gray-500 mt-0.5 block">
+                    {normalizedOption.description}
+                  </span>
+                )}
+              </div>
             </div>
           </motion.button>
         );

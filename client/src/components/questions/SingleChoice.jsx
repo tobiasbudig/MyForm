@@ -9,13 +9,32 @@ export default function SingleChoice({ question, value, onChange, onSubmit, comm
   const [otherText, setOtherText] = useState('');
   const timeoutRef = useRef(null);
 
+  // Normalize option to handle both string and object formats
+  const normalizeOption = (option) => {
+    if (typeof option === 'string') {
+      return { text: option, description: null };
+    }
+    return option;
+  };
+
   // Create display options (add "Other" if has_other is true)
   const displayOptions = question.has_other
     ? [...(question.options || []), 'Other']
     : question.options || [];
-  
+
   // Map display text for translation
-  const getDisplayText = (option) => option === 'Other' ? 'Sonstiges' : option;
+  const getDisplayText = (option) => {
+    if (option === 'Other') return 'Sonstiges';
+    const normalized = normalizeOption(option);
+    return normalized.text;
+  };
+
+  // Get option text for comparison
+  const getOptionText = (option) => {
+    if (option === 'Other') return 'Other';
+    const normalized = normalizeOption(option);
+    return normalized.text;
+  };
 
   // Initialize "Other" state from existing value
   useEffect(() => {
@@ -37,10 +56,10 @@ export default function SingleChoice({ question, value, onChange, onSubmit, comm
       setShowOtherInput(true);
       onChange(''); // Clear value temporarily
     } else {
-      // Normal option selected
+      // Normal option selected - store the text value
       setShowOtherInput(false);
       setOtherText('');
-      onChange(option);
+      onChange(getOptionText(option));
       setIsAutoAdvancing(true);
 
       timeoutRef.current = setTimeout(() => {
@@ -77,13 +96,14 @@ export default function SingleChoice({ question, value, onChange, onSubmit, comm
   return (
     <div className="w-full space-y-3">
       {displayOptions.map((option, index) => {
+        const normalizedOption = normalizeOption(option);
         const isSelected = option === 'Other'
           ? isOtherSelected
-          : value === option;
+          : value === getOptionText(option);
 
         return (
           <motion.button
-            key={option}
+            key={typeof option === 'string' ? option : option.text}
             type="button"
             onClick={() => handleSelect(option)}
             initial={{ opacity: 0 }}
@@ -95,7 +115,14 @@ export default function SingleChoice({ question, value, onChange, onSubmit, comm
                 : 'border-border hover:border-primary-light'
             }`}
           >
-            <span className="text-lg">{getDisplayText(option)}</span>
+            <div>
+              <span className="text-lg font-semibold block">{getDisplayText(option)}</span>
+              {normalizedOption.description && (
+                <span className="text-sm text-gray-500 mt-1 block">
+                  {normalizedOption.description}
+                </span>
+              )}
+            </div>
           </motion.button>
         );
       })}

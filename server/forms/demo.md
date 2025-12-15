@@ -40,11 +40,16 @@ thankYou:
 - help: "Rate each statement based on your experience"
 - explanation: "Your feedback on these specific aspects helps us understand which areas we're excelling in and where we need to improve. Please rate each statement honestly."
 - options:
-  - Strongly Disagree
-  - Disagree
-  - Neutral
-  - Agree
-  - Strongly Agree
+  - text: Strongly Disagree
+    description: Completely dissatisfied
+  - text: Disagree
+    description: Somewhat dissatisfied
+  - text: Neutral
+    description: Neither satisfied nor dissatisfied
+  - text: Agree
+    description: Somewhat satisfied
+  - text: Strongly Agree
+    description: Completely satisfied
 - statements:
   - The product is easy to use
   - The product meets my needs
@@ -61,10 +66,14 @@ thankYou:
 - help: "Select all that apply"
 - explanation: "Knowing which features you use most helps us prioritize development efforts and ensure we're investing in the areas that matter most to our users. Feel free to select multiple options."
 - options:
-  - Dashboard
-  - Reports
-  - API
-  - Integrations
+  - text: Dashboard
+    description: Main overview and analytics interface
+  - text: Reports
+    description: Custom reports and data exports
+  - text: API
+    description: Programmatic access to data
+  - text: Integrations
+    description: Third-party app connections
   - Mobile App
 
 ---
@@ -76,10 +85,14 @@ thankYou:
 - has_other: true
 - explanation: "Understanding your role helps us tailor our content, features, and communication to match your specific needs and use cases. This allows us to provide more relevant and valuable experiences."
 - options:
-  - Developer
-  - Designer
-  - Manager
-  - Executive
+  - text: Developer
+    description: Software engineers, programmers, and technical roles
+  - text: Designer
+    description: UI/UX designers, graphic designers, and creative professionals
+  - text: Manager
+    description: Team leads, project managers, and department heads
+  - text: Executive
+    description: C-level executives and senior leadership
 
 ---
 

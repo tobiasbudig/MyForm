@@ -11,10 +11,25 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
 
   const [currentStatementIndex, setCurrentStatementIndex] = useState(0);
 
+  // Normalize option to handle both string and object formats
+  const normalizeOption = (option) => {
+    if (typeof option === 'string') {
+      return { text: option, description: null };
+    }
+    return option;
+  };
+
+  // Get option text for comparison
+  const getOptionText = (option) => {
+    const normalized = normalizeOption(option);
+    return normalized.text;
+  };
+
   const handleSelect = (statementIndex, option) => {
+    const optionText = getOptionText(option);
     const newSelections = {
       ...selections,
-      [`statement_${statementIndex}`]: option
+      [`statement_${statementIndex}`]: optionText
     };
     onChange(newSelections);
 
@@ -84,7 +99,8 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
           {/* Options Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {options.map((option, optionIndex) => {
-              const isSelected = selections[`statement_${currentStatementIndex}`] === option;
+              const normalizedOption = normalizeOption(option);
+              const isSelected = selections[`statement_${currentStatementIndex}`] === getOptionText(option);
 
               return (
                 <motion.button
@@ -100,7 +116,16 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
                       : 'border-border hover:border-primary-light'
                   }`}
                 >
-                  <span className="block text-center">{option}</span>
+                  <div className="text-center">
+                    <span className="block text-sm sm:text-base font-semibold">
+                      {normalizedOption.text}
+                    </span>
+                    {normalizedOption.description && (
+                      <span className="block text-xs text-gray-500 mt-1">
+                        {normalizedOption.description}
+                      </span>
+                    )}
+                  </div>
                 </motion.button>
               );
             })}

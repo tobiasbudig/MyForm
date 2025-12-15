@@ -194,6 +194,7 @@ Multi-line textarea for longer responses.
 ### 3. Single Choice
 Radio buttons - user can select one option.
 
+**Simple format:**
 ```markdown
 # Question text
 - type: single_choice
@@ -205,9 +206,26 @@ Radio buttons - user can select one option.
   - Option 3
 ```
 
+**Hierarchical format (with descriptions):**
+```markdown
+# Question text
+- type: single_choice
+- required: true|false
+- id: unique_id
+- options:
+  - text: Option 1
+    description: Brief explanation of option 1
+  - text: Option 2
+    description: Brief explanation of option 2
+  - Option 3  # Can mix formats
+```
+
+Descriptions appear in smaller, grey text below the main option. The main option text is displayed in **bold**.
+
 ### 4. Multiple Choice
 Checkboxes - user can select multiple options.
 
+**Simple format:**
 ```markdown
 # Question text
 - type: multiple_choice
@@ -217,6 +235,20 @@ Checkboxes - user can select multiple options.
   - Option 1
   - Option 2
   - Option 3
+```
+
+**Hierarchical format (with descriptions):**
+```markdown
+# Question text
+- type: multiple_choice
+- required: true|false
+- id: unique_id
+- options:
+  - text: Option 1
+    description: Brief explanation of option 1
+  - text: Option 2
+    description: Brief explanation of option 2
+  - Option 3  # Can mix formats
 ```
 
 ### 5. Likert Scale
@@ -249,6 +281,7 @@ Fixed 0-10 scale with color gradient.
 ### 7. Grid
 Multiple statements with single-choice options for each. Displays one statement at a time with progress indicators and navigation.
 
+**Simple format:**
 ```markdown
 # Question text
 - type: grid
@@ -267,6 +300,33 @@ Multiple statements with single-choice options for each. Displays one statement 
   - The product is reliable
   - I would recommend this product
 ```
+
+**Hierarchical format (with descriptions):**
+```markdown
+# Question text
+- type: grid
+- required: true|false
+- id: unique_id
+- help: "Optional help text"
+- options:
+  - text: Strongly Disagree
+    description: Completely dissatisfied
+  - text: Disagree
+    description: Somewhat dissatisfied
+  - text: Neutral
+    description: Neither satisfied nor dissatisfied
+  - text: Agree
+    description: Somewhat satisfied
+  - text: Strongly Agree
+    description: Completely satisfied
+- statements:
+  - The product is easy to use
+  - The product meets my needs
+  - The product is reliable
+  - I would recommend this product
+```
+
+Descriptions appear in smaller, grey text below the main option. The main option text is displayed in **bold**.
 
 **Features:**
 - One statement displayed at a time with smooth transitions

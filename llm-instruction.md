@@ -115,14 +115,14 @@ Select one option from a list.
 - `type: single_choice` (required)
 - `id` (string, required)
 - `required` (boolean)
-- `options` (array, required): List of choices
+- `options` (array, required): List of choices (simple strings or hierarchical objects)
 - `has_other` (boolean): Enable "Other" option with text input
 - `help` (string)
 - `explanation` (string)
 - `depends_on` (string)
 - `show_when` (string)
 
-**Example:**
+**Simple format example:**
 ```markdown
 # What is your role?
 - type: single_choice
@@ -137,7 +137,30 @@ Select one option from a list.
   - Executive
 ```
 
-**Note:** When `has_other: true`, users can type custom text if they select "Other".
+**Hierarchical format example (with descriptions):**
+```markdown
+# What is your role?
+- type: single_choice
+- required: true
+- id: user_role
+- has_other: true
+- explanation: This helps us tailor content to your needs
+- options:
+  - text: Developer
+    description: Software engineers, programmers, and technical roles
+  - text: Designer
+    description: UI/UX designers, graphic designers, and creative professionals
+  - text: Manager
+    description: Team leads, project managers, and department heads
+  - text: Executive
+    description: C-level executives and senior leadership
+```
+
+**Notes:**
+- When `has_other: true`, users can type custom text if they select "Other"
+- Descriptions appear in smaller, grey text below the main option
+- The main option text is displayed in **bold**
+- You can mix simple strings and hierarchical objects in the same `options` array
 
 ### 4. Multiple Choice (`multiple_choice`)
 
@@ -147,14 +170,14 @@ Select multiple options from a list.
 - `type: multiple_choice` (required)
 - `id` (string, required)
 - `required` (boolean)
-- `options` (array, required): List of choices
+- `options` (array, required): List of choices (simple strings or hierarchical objects)
 - `has_other` (boolean): Enable "Other" option with text input
 - `help` (string)
 - `explanation` (string)
 - `depends_on` (string)
 - `show_when` (string)
 
-**Example:**
+**Simple format example:**
 ```markdown
 # Which features do you use?
 - type: multiple_choice
@@ -170,7 +193,31 @@ Select multiple options from a list.
   - Mobile App
 ```
 
-**Note:** Answer is stored as an array of selected options.
+**Hierarchical format example (with descriptions):**
+```markdown
+# Which features do you use?
+- type: multiple_choice
+- required: false
+- id: features_used
+- has_other: true
+- help: Select all that apply
+- options:
+  - text: Dashboard
+    description: Main overview and analytics interface
+  - text: Reports
+    description: Custom reports and data exports
+  - text: API
+    description: Programmatic access to data
+  - text: Integrations
+    description: Third-party app connections
+  - Mobile App
+```
+
+**Notes:**
+- Answer is stored as an array of selected options
+- Descriptions appear in smaller, grey text below the main option
+- The main option text is displayed in **bold**
+- You can mix simple strings and hierarchical objects in the same `options` array (as shown above with "Mobile App")
 
 ### 5. Likert Scale (`likert`)
 
@@ -239,13 +286,13 @@ Multiple statements rated on the same scale.
 - `id` (string, required)
 - `required` (boolean)
 - `statements` (array, required): List of statements to rate
-- `options` (array, required): Rating options for each statement
+- `options` (array, required): Rating options for each statement (simple strings or hierarchical objects)
 - `help` (string)
 - `explanation` (string)
 - `depends_on` (string)
 - `show_when` (string)
 
-**Example:**
+**Simple format example:**
 ```markdown
 # How much do you agree with these statements?
 - type: grid
@@ -266,7 +313,38 @@ Multiple statements rated on the same scale.
   - I would recommend this product
 ```
 
-**Note:** Users answer each statement one at a time with auto-advance. Answer is stored as an object with keys `statement_0`, `statement_1`, etc.
+**Hierarchical format example (with descriptions):**
+```markdown
+# How much do you agree with these statements?
+- type: grid
+- required: false
+- id: product_feedback
+- help: Rate each statement based on your experience
+- explanation: Your feedback helps us improve the product
+- options:
+  - text: Strongly Disagree
+    description: Completely dissatisfied
+  - text: Disagree
+    description: Somewhat dissatisfied
+  - text: Neutral
+    description: Neither satisfied nor dissatisfied
+  - text: Agree
+    description: Somewhat satisfied
+  - text: Strongly Agree
+    description: Completely satisfied
+- statements:
+  - The product is easy to use
+  - The product meets my needs
+  - The product is reliable
+  - I would recommend this product
+```
+
+**Notes:**
+- Users answer each statement one at a time with auto-advance
+- Answer is stored as an object with keys `statement_0`, `statement_1`, etc.
+- Descriptions appear in smaller, grey text below the main option
+- The main option text is displayed in **bold**
+- You can mix simple strings and hierarchical objects in the same `options` array
 
 ## Conditional Logic
 
@@ -364,6 +442,10 @@ All question types support optional user comments. Users can click a speech bubb
 - Keep option text short (1-5 words ideal)
 - Use parallel structure (all verbs or all nouns)
 - Order logically (chronological, scale-based, alphabetical)
+- Use hierarchical format (with descriptions) when options need clarification
+- Keep descriptions concise (1 sentence or phrase)
+- Use descriptions to disambiguate similar options or provide context
+- Simple format is fine for self-explanatory options
 
 ### Help Text
 - Use `help` for brief clarifications (1 sentence)
