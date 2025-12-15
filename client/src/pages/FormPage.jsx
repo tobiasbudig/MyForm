@@ -334,7 +334,7 @@ export default function FormPage() {
         total={visibleQuestions.length}
       />
 
-      <div className="flex-1 flex flex-col items-center justify-center py-12">
+      <div className="flex-1 flex flex-col items-center py-6 md:py-12 overflow-hidden">
         <AnimatePresence mode="wait">
           <QuestionCard
             key={currentQuestion.id}
@@ -353,7 +353,7 @@ export default function FormPage() {
           />
         </AnimatePresence>
 
-        <div className="w-full max-w-2xl px-6 mt-8">
+        <div className="w-full max-w-2xl px-6 mt-4 md:mt-8 flex-shrink-0">
           <NavigationButtons
             onBack={handleBack}
             onNext={handleNext}

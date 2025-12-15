@@ -47,42 +47,48 @@ export default function QuestionCard({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="w-full max-w-2xl mx-auto px-6"
+      className="w-full max-w-2xl mx-auto flex flex-col h-full"
     >
-      <div className="mb-4 text-sm text-textSecondary">
-        Frage {questionNumber} von {totalQuestions}
+      {/* Header Section - stays visible */}
+      <div className="bg-white px-6 pb-4 pt-2">
+        <div className="mb-4 text-sm text-textSecondary">
+          Frage {questionNumber} von {totalQuestions}
+        </div>
+
+        <h2 className="text-3xl font-semibold text-textPrimary mb-2 flex items-center gap-2">
+          <span>
+            {question.text}
+            {question.required && <span className="text-error ml-1">*</span>}
+          </span>
+          {question.explanation && (
+            <button
+              type="button"
+              onClick={() => setShowExplanation(true)}
+              className="text-textSecondary hover:text-primary transition-default"
+              aria-label="Erklärung anzeigen"
+            >
+              <HelpCircle size={24} />
+            </button>
+          )}
+        </h2>
+
+        {question.help && (
+          <p className="text-textSecondary">{question.help}</p>
+        )}
       </div>
 
-      <h2 className="text-3xl font-semibold text-textPrimary mb-2 flex items-center gap-2">
-        <span>
-          {question.text}
-          {question.required && <span className="text-error ml-1">*</span>}
-        </span>
-        {question.explanation && (
-          <button
-            type="button"
-            onClick={() => setShowExplanation(true)}
-            className="text-textSecondary hover:text-primary transition-default"
-            aria-label="Erklärung anzeigen"
-          >
-            <HelpCircle size={24} />
-          </button>
-        )}
-      </h2>
-
-      {question.help && (
-        <p className="text-textSecondary mb-8">{question.help}</p>
-      )}
-
-      <div className="mt-8">
-        <QuestionComponent
-          question={question}
-          value={value}
-          onChange={onChange}
-          onSubmit={onSubmit}
-          comment={comment}
-          onCommentChange={onCommentChange}
-        />
+      {/* Content Section - scrolls when needed */}
+      <div className="flex-1 overflow-y-auto px-6 pb-6">
+        <div className="mt-4">
+          <QuestionComponent
+            question={question}
+            value={value}
+            onChange={onChange}
+            onSubmit={onSubmit}
+            comment={comment}
+            onCommentChange={onCommentChange}
+          />
+        </div>
       </div>
 
       <Modal
