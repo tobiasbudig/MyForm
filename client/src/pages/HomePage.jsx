@@ -13,20 +13,20 @@ export default function HomePage() {
       <div className="max-w-2xl text-center flex-1 flex items-center">
         <div>
           <h1 className="text-5xl font-bold text-textPrimary mb-12">
-            Willkommen
+            Willkommen zur ETH Umfrage über KI Nuztzung im medizinischen Alltag
           </h1>
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Link
               to="/form/doctor"
               className="px-12 py-4 bg-primary text-white text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg w-full sm:w-auto"
             >
-              Für Mediziner
+              Für Ärzte
             </Link>
             <Link
               to="/form/mfa"
               className="px-12 py-4 bg-primary text-white text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg w-full sm:w-auto"
             >
-              Für MFA
+              Für MFAs
             </Link>
           </div>
         </div>
