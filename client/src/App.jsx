@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast';
 import ErrorBoundary from './components/ErrorBoundary';
 import FormPage from './pages/FormPage';
 import HomePage from './pages/HomePage';
+import Impressum from './pages/Impressum';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminFormView from './pages/AdminFormView';
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/form/:formId" element={<FormPage />} />
+          <Route path="/impressum" element={<Impressum />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/forms/:formId" element={<AdminFormView />} />

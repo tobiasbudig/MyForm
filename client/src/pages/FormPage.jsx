@@ -9,6 +9,7 @@ import QuestionCard from '../components/QuestionCard';
 import NavigationButtons from '../components/NavigationButtons';
 import ThankYouScreen from '../components/ThankYouScreen';
 import FormNotFound from '../components/FormNotFound';
+import FixedFooter from '../components/FixedFooter';
 
 export default function FormPage() {
   const { formId } = useParams();
@@ -367,6 +368,7 @@ export default function FormPage() {
           />
         </div>
       </div>
+      <FixedFooter />
     </div>
   );
 }
