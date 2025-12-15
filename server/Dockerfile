@@ -22,9 +22,10 @@ RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
 # Copy from builder with --link for better caching
-COPY --link --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
-COPY --link --from=builder --chown=nodejs:nodejs /app/src ./src
-COPY --link --from=builder --chown=nodejs:nodejs /app/package.json ./
+# Use numeric UIDs with --link (--link doesn't resolve user names)
+COPY --link --from=builder --chown=1001:1001 /app/node_modules ./node_modules
+COPY --link --from=builder --chown=1001:1001 /app/src ./src
+COPY --link --from=builder --chown=1001:1001 /app/package.json ./
 
 USER nodejs
 
