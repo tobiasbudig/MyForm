@@ -21,7 +21,11 @@ async function startSubmission(req, res) {
     const csrfToken = uuidv4();
 
     // Get IP address and user agent
-    const ipAddress = req.ip || req.connection.remoteAddress;
+    // Handle proxied requests (nginx sets x-real-ip and x-forwarded-for)
+    const ipAddress = req.headers['x-real-ip'] ||
+                      req.headers['x-forwarded-for']?.split(',')[0].trim() ||
+                      req.ip ||
+                      req.connection.remoteAddress;
     const userAgent = req.get('user-agent') || null;
 
     // Insert submission

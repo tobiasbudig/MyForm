@@ -70,10 +70,10 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStatementIndex}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
           className="space-y-6"
         >
           {/* Statement Text */}
@@ -91,9 +91,9 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
                   key={optionIndex}
                   type="button"
                   onClick={() => handleSelect(currentStatementIndex, option)}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: optionIndex * 0.05 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.2 }}
                   className={`px-4 py-3 text-sm sm:text-base border-2 rounded-lg transition-default hover:scale-[1.01] ${
                     isSelected
                       ? 'border-primary bg-primary-50 text-primary font-medium'

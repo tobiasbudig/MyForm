@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import { getForm, startSubmission, saveAnswer, completeSubmission } from '../utils/api';
 import ProgressBar from '../components/ProgressBar';
 import WelcomeScreen from '../components/WelcomeScreen';
@@ -185,7 +186,8 @@ export default function FormPage() {
             csrfToken
           );
         } catch (err) {
-          // Error saving comment
+          console.error('Error saving comment:', err);
+          toast.error('Kommentar konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.');
         } finally {
           setSaving(false);
         }
@@ -206,7 +208,9 @@ export default function FormPage() {
         const comment = comments[questionId] || null;
         await saveAnswer(submissionId, questionId, questionText, value, comment, csrfToken);
       } catch (err) {
-        // Error saving answer
+        console.error('Error saving answer:', err);
+        toast.error('Antwort konnte nicht gespeichert werden. Ihre Eingabe wird bei der nächsten Änderung erneut versucht.');
+        // Keep the answer in state for retry on next change
       } finally {
         setSaving(false);
       }

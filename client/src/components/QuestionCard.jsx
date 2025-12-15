@@ -43,10 +43,10 @@ export default function QuestionCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.2 }}
       className="w-full max-w-2xl mx-auto px-6"
     >
       <div className="mb-4 text-sm text-textSecondary">

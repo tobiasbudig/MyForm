@@ -43,15 +43,9 @@ export default function NPS({ question, value, onChange, onSubmit, comment, onCo
             key={num}
             type="button"
             onClick={() => handleSelect(num)}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{
-              opacity: isAutoAdvancing && value === num ? [1, 0.4, 1, 0.4, 1] : 1,
-              scale: 1
-            }}
-            transition={{
-              delay: index * 0.03,
-              opacity: { duration: 0.3, ease: "easeInOut" }
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
             className={`aspect-square px-2 py-3 border-2 rounded-lg transition-default hover:scale-105 ${getButtonColor(
               num
             )}`}

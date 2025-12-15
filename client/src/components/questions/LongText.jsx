@@ -31,9 +31,6 @@ export default function LongText({ question, value, onChange, onSubmit, comment,
       <div className="mt-2 text-sm text-textSecondary text-right">
         {(value || '').length} / {maxLength}
       </div>
-      <div className="mt-2 text-sm text-textSecondary">
-        Press Cmd/Ctrl + Enter to submit
-      </div>
       <CommentInput value={comment} onChange={onCommentChange} />
     </div>
   );

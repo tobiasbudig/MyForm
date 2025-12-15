@@ -81,9 +81,9 @@ export default function MultipleChoice({ question, value, onChange, comment, onC
             key={option}
             type="button"
             onClick={() => handleToggle(option)}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
             className={`w-full px-4 py-3 sm:px-6 sm:py-4 text-left border-2 rounded-lg transition-default hover:scale-[1.01] ${
               isSelected
                 ? 'border-primary bg-primary-50 text-primary'

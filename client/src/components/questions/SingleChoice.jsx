@@ -86,15 +86,9 @@ export default function SingleChoice({ question, value, onChange, onSubmit, comm
             key={option}
             type="button"
             onClick={() => handleSelect(option)}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: isAutoAdvancing && isSelected ? [1, 0.4, 1, 0.4, 1] : 1,
-              y: 0
-            }}
-            transition={{
-              delay: index * 0.05,
-              opacity: { duration: 0.3, ease: "easeInOut" }
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
             className={`w-full px-6 py-4 text-left border-2 rounded-lg transition-default hover:scale-[1.01] ${
               isSelected
                 ? 'border-primary bg-primary-50 text-primary'

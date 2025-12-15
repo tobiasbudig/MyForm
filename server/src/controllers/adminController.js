@@ -101,7 +101,7 @@ async function getForms(req, res) {
     const formIds = await listForms();
 
     // Get stats for each form
-    const formsWithStats = await Promise.all(
+    const results = await Promise.allSettled(
       formIds.map(async (formId) => {
         // Parse form to get title
         const form = await parseForm(formId);
@@ -128,6 +128,20 @@ async function getForms(req, res) {
         };
       })
     );
+
+    // Filter successful results
+    const formsWithStats = results
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value);
+
+    // Log any failures
+    const failures = results.filter(result => result.status === 'rejected');
+    if (failures.length > 0) {
+      logger.warn('Some forms failed to load', {
+        count: failures.length,
+        errors: failures.map(f => f.reason?.message),
+      });
+    }
 
     res.json({
       success: true,
@@ -169,10 +183,10 @@ async function getFormSubmissions(req, res) {
     );
 
     // For each submission, get all answers
-    const submissions = await Promise.all(
+    const results = await Promise.allSettled(
       submissionsResult.rows.map(async (submission) => {
         const answersResult = await db.query(
-          `SELECT question_id, question_text, answer_value, answered_at
+          `SELECT question_id, question_text, answer_value, comment, answered_at
            FROM answers
            WHERE submission_id = $1
            ORDER BY answered_at ASC`,
@@ -185,6 +199,21 @@ async function getFormSubmissions(req, res) {
         };
       })
     );
+
+    // Filter successful results
+    const submissions = results
+      .filter(result => result.status === 'fulfilled')
+      .map(result => result.value);
+
+    // Log any failures
+    const failures = results.filter(result => result.status === 'rejected');
+    if (failures.length > 0) {
+      logger.warn('Some submissions failed to load', {
+        formId,
+        count: failures.length,
+        errors: failures.map(f => f.reason?.message),
+      });
+    }
 
     res.json({
       success: true,

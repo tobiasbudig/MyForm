@@ -14,7 +14,6 @@ thankYou:
 - type: nps
 - required: false
 - id: nps_score
-- explaination: How did you liked the experience
 - help: "0 means not likely, 10 means very likely"
 - explanation: "Net Promoter Score (NPS) helps us understand customer loyalty and satisfaction. Your honest feedback enables us to improve our service and better serve our users."
 
@@ -24,7 +23,6 @@ thankYou:
 - type: likert
 - required: false
 - id: satisfaction
-- explaination: Please rate us
 - scale: 5
 - labels:
   - Very Unsatisfied

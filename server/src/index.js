@@ -59,7 +59,7 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   logger.info(`Server started`, {
     port: PORT,
     environment: process.env.NODE_ENV,
@@ -67,13 +67,34 @@ app.listen(PORT, '0.0.0.0', () => {
   });
 });
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received, shutting down gracefully');
-  process.exit(0);
-});
+// Set request timeout (30 seconds)
+server.timeout = 30000;
 
-process.on('SIGINT', () => {
-  logger.info('SIGINT received, shutting down gracefully');
-  process.exit(0);
-});
+// Graceful shutdown handler
+async function gracefulShutdown(signal) {
+  logger.info(`${signal} received. Starting graceful shutdown...`);
+
+  // Stop accepting new requests
+  server.close(async () => {
+    logger.info('HTTP server closed');
+
+    // Close database pool
+    try {
+      await db.closePool();
+      logger.info('Graceful shutdown completed');
+      process.exit(0);
+    } catch (err) {
+      logger.error('Error during shutdown', { error: err.message, stack: err.stack });
+      process.exit(1);
+    }
+  });
+
+  // Force shutdown after 10 seconds if graceful shutdown fails
+  setTimeout(() => {
+    logger.error('Forced shutdown after timeout');
+    process.exit(1);
+  }, 10000);
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));

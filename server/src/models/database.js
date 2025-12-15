@@ -23,20 +23,15 @@ pool.query('SELECT NOW()', (err, res) => {
   }
 });
 
-// Graceful shutdown
-process.on('SIGTERM', async () => {
-  logger.info('SIGTERM received, closing database pool');
+// Export close function for graceful shutdown
+const closePool = async () => {
+  logger.info('Closing database pool...');
   await pool.end();
-  process.exit(0);
-});
-
-process.on('SIGINT', async () => {
-  logger.info('SIGINT received, closing database pool');
-  await pool.end();
-  process.exit(0);
-});
+  logger.info('Database pool closed');
+};
 
 module.exports = {
   query: (text, params) => pool.query(text, params),
   pool,
+  closePool,
 };

@@ -8,7 +8,37 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 30000, // 30 second timeout
 });
+
+// Response interceptor for global error handling
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Network error (no response from server)
+    if (!error.response) {
+      console.error('Network error:', error.message);
+      error.userMessage = 'Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung.';
+    }
+    // Server error (5xx)
+    else if (error.response.status >= 500) {
+      console.error('Server error:', error.response.status, error.response.data);
+      error.userMessage = 'Serverfehler. Bitte versuchen Sie es später erneut.';
+    }
+    // Client error (4xx)
+    else if (error.response.status >= 400) {
+      console.error('Client error:', error.response.status, error.response.data);
+      error.userMessage = error.response.data?.error || 'Anfrage fehlgeschlagen.';
+    }
+    // Timeout
+    else if (error.code === 'ECONNABORTED') {
+      console.error('Request timeout');
+      error.userMessage = 'Zeitüberschreitung. Bitte versuchen Sie es erneut.';
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 // =====================
 // FORMS API
