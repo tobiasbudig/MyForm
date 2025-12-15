@@ -43,3 +43,11 @@ coverage/
 # Claude
 .claude/
 
+
+client/src/content/impressum-praxelo.md
+
+server/forms/doctor.yaml
+server/forms/mfa.yaml
+
+server/forms/doctor.md
+server/forms/mfa.md
