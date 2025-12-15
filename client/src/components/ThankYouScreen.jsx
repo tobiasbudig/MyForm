@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
 
 export default function ThankYouScreen({ thankYou }) {
+  // Split heading by newlines to support multi-line titles
+  const headingLines = thankYou.heading.split('\n').filter(line => line.trim());
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -28,7 +31,12 @@ export default function ThankYouScreen({ thankYou }) {
           </svg>
         </motion.div>
         <h1 className="text-5xl font-bold text-textPrimary mb-6">
-          {thankYou.heading}
+          {headingLines.map((line, index) => (
+            <span key={index}>
+              {line}
+              {index < headingLines.length - 1 && <br />}
+            </span>
+          ))}
         </h1>
         <p className="text-xl text-textSecondary mb-12">
           {thankYou.body}

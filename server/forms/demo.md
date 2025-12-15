@@ -2,11 +2,15 @@
 title: "Demo Survey"
 description: "Testing all question types"
 welcome:
-  heading: "Welcome to the Demo"
+  heading: |
+    Welcome to the
+    Demo Survey
   body: "This survey demonstrates all available question types. It takes about 2 minutes to complete."
   buttonText: "Let's Go"
 thankYou:
-  heading: "All Done!"
+  heading: |
+    All Done!
+    Thank You!
   body: "Thanks for testing the demo survey. Your responses have been recorded."
 ---
 
