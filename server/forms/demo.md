@@ -14,6 +14,25 @@ thankYou:
   body: "Thanks for testing the demo survey. Your responses have been recorded."
 ---
 
+# Willkommen zur Umfrage
+- type: information
+- description:
+  Diese Umfrage demonstriert alle verfügbaren Fragetypen.
+
+  Sie dauert etwa 2 Minuten und zeigt verschiedene Möglichkeiten der Datenerfassung.
+
+  Bitte lesen Sie jede Frage sorgfältig durch und beantworten Sie ehrlich.
+
+---
+
+# Wichtige Information
+- type: information
+- description: Ihre Antworten werden vertraulich behandelt und nur für Testzwecke verwendet. Sie können die Umfrage jederzeit abbrechen.
+- image: demo_image.jpeg
+- imageAlt: Demo image for the survey
+
+---
+
 # How likely are you to recommend us?
 - type: nps
 - required: false

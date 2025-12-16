@@ -49,8 +49,6 @@ services:
       context: ./client
       dockerfile: Dockerfile.dev
     container_name: myform_client_dev
-    environment:
-      VITE_API_URL: http://localhost:3001/api
     volumes:
       - ./client/src:/app/src
       - ./client/index.html:/app/index.html:ro

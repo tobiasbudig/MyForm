@@ -5,8 +5,9 @@ A self-hosted form builder with a React frontend and Node.js backend. Forms are 
 ## Features
 
 - **Modern UI**: Clean, Apple-like design with smooth animations
-- **7 Question Types**: Short text, long text, single choice, multiple choice, Likert scale, NPS, and Grid
+- **8 Question Types**: Short text, long text, single choice, multiple choice, Likert scale, NPS, Grid, and Information
 - **Markdown Configuration**: Define questionnaires in simple markdown files
+- **Image Support**: Display images in information blocks for scenarios and context
 - **Auto-save**: Answers are automatically saved as users progress
 - **Security**: Rate limiting, CSRF protection, input validation, secure admin authentication
 - **Admin Panel**: View submissions, export to CSV, manage forms
@@ -335,6 +336,86 @@ Descriptions appear in smaller, grey text below the main option. The main option
 - Previous/Next navigation buttons
 - Auto-submits after completing the last statement
 - Answers stored as JSON object: `{"statement_0": "Agree", "statement_1": "Neutral"}`
+
+### 8. Information
+
+Display informational content with optional image. This isn't a traditional question but allows you to present scenarios, instructions, or context to users.
+
+```markdown
+# Section Title
+- type: information
+- description: Your informational text here
+- image: filename.png
+- imageAlt: Description for accessibility
+```
+
+**With multiline description (using `|` pipe):**
+```markdown
+# Patient Scenario
+- type: information
+- description: |
+  A 45-year-old patient presents with acute chest pain.
+
+  Please review the diagnostic image below before answering.
+- image: patient-xray.png
+- imageAlt: Chest X-ray showing right lung opacity
+```
+
+**With multiline description (indented lines):**
+```markdown
+# Patient Scenario
+- type: information
+- description:
+  A 45-year-old patient presents with acute chest pain.
+
+  Please review the diagnostic image below before answering.
+- image: patient-xray.png
+- imageAlt: Chest X-ray showing right lung opacity
+```
+
+**With extra whitespace for better formatting:**
+```markdown
+# Instructions
+- type: information
+- description:
+  Section 1: Important Notes
+  Please read carefully before proceeding.
+
+
+  Section 2: What to Expect
+  This survey will take approximately 5 minutes.
+
+
+  Section 3: Your Privacy
+  All responses are confidential.
+```
+(Blank lines create visual spacing between sections)
+
+**Features:**
+- Title displayed in question header
+- Description supports multiline text with preserved formatting
+- Optional image display (PNG, JPG, GIF supported)
+- Uses standard navigation buttons at bottom of form
+- No answer stored (purely informational)
+- Graceful error handling if image fails to load
+
+**Image Management:**
+- Images are uploaded manually to `server/resources/` folder
+- Reference images by filename in the markdown file
+- Images served at `/api/resources/{filename}`
+- Recommended: Keep images under 500KB for fast loading
+
+## Image Resources
+
+Information blocks can display images that are manually uploaded to the `server/resources/` directory.
+
+**Supported Formats**: PNG, JPG, JPEG, GIF
+**Upload Method**: Manual file copy to `server/resources/` directory
+**Access URL**: `http://localhost:3001/api/resources/{filename}`
+
+To add an image:
+1. Place your image file in `server/resources/`
+2. Reference it in your markdown: `- image: filename.png`
 
 ## Docker Commands
 

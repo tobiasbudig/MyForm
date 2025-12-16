@@ -142,15 +142,6 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
                 Previous
               </button>
             )}
-            {currentStatementIndex < statements.length - 1 && selections[`statement_${currentStatementIndex}`] && (
-              <button
-                type="button"
-                onClick={handleNextStatement}
-                className="ml-auto px-4 py-2 bg-primary text-white rounded-lg hover:opacity-90 transition-default"
-              >
-                Next
-              </button>
-            )}
           </div>
         </motion.div>
       </AnimatePresence>

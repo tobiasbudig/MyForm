@@ -19,6 +19,10 @@ build/
 client/dist/
 server/dist/
 
+# Resources folder - images are uploaded manually
+server/resources/*
+!server/resources/.gitkeep
+
 # OS files
 .DS_Store
 Thumbs.db

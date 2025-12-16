@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const path = require('path');
 const logger = require('./utils/logger');
 const requestLogger = require('./middleware/requestLogger');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
@@ -25,6 +26,13 @@ app.use(express.urlencoded({ extended: true }));
 
 // Request logging
 app.use(requestLogger);
+
+// Serve static resources (images)
+app.use('/api/resources', express.static(path.join(__dirname, '..', 'resources'), {
+  maxAge: '1d',
+  etag: true,
+  lastModified: true,
+}));
 
 // Health check endpoint
 app.get('/health', async (req, res) => {

@@ -75,9 +75,11 @@ function parseQuestionBlock(block, index) {
     const optionsList = [];
     const labelsList = [];
     const statementsList = [];
+    const descriptionLines = [];
     let isParsingOptions = false;
     let isParsingLabels = false;
     let isParsingStatements = false;
+    let isParsingDescription = false;
     let currentOption = null; // For hierarchical options
 
     for (let i = 0; i < lines.length; i++) {
@@ -89,56 +91,90 @@ function parseQuestionBlock(block, index) {
         isParsingOptions = false;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- required:')) {
         metadata.required = line.split(':')[1].trim() === 'true';
         isParsingOptions = false;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- has_other:')) {
         metadata.has_other = line.split(':')[1].trim() === 'true';
         isParsingOptions = false;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- id:')) {
         metadata.id = line.split(':')[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- placeholder:')) {
         metadata.placeholder = line.split(':', 2)[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- help:')) {
         metadata.help = line.split(':', 2)[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- explanation:')) {
         metadata.explanation = line.split(':', 2)[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
+      } else if (line.startsWith('- description:')) {
+        const descValue = line.split(':', 2)[1].trim();
+        // If there's content on the same line and it's not a multiline indicator
+        if (descValue && descValue !== '|') {
+          metadata.description = descValue;
+        }
+        // Enable multiline parsing for indented lines
+        isParsingDescription = true;
+        isParsingOptions = false;
+        isParsingLabels = false;
+        isParsingStatements = false;
+      } else if (line.startsWith('- image:')) {
+        metadata.image = line.split(':')[1].trim();
+        isParsingOptions = false;
+        isParsingLabels = false;
+        isParsingStatements = false;
+        isParsingDescription = false;
+      } else if (line.startsWith('- imageAlt:')) {
+        metadata.imageAlt = line.split(':', 2)[1].trim();
+        isParsingOptions = false;
+        isParsingLabels = false;
+        isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- depends_on:')) {
         metadata.depends_on = line.split(':')[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- show_when:')) {
         metadata.show_when = line.split(':', 2)[1].trim();
         isParsingOptions = false;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- maxLength:')) {
         metadata.maxLength = parseInt(line.split(':')[1].trim());
         isParsingOptions = false;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- scale:')) {
         metadata.scale = parseInt(line.split(':')[1].trim());
         isParsingOptions = false;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- options:')) {
         // Save any pending hierarchical option before switching context
         if (currentOption) {
@@ -148,6 +184,7 @@ function parseQuestionBlock(block, index) {
         isParsingOptions = true;
         isParsingLabels = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- labels:')) {
         // Save any pending hierarchical option before switching context
         if (currentOption) {
@@ -157,6 +194,7 @@ function parseQuestionBlock(block, index) {
         isParsingLabels = true;
         isParsingOptions = false;
         isParsingStatements = false;
+        isParsingDescription = false;
       } else if (line.startsWith('- statements:')) {
         // Save any pending hierarchical option before switching context
         if (currentOption) {
@@ -166,6 +204,7 @@ function parseQuestionBlock(block, index) {
         isParsingStatements = true;
         isParsingOptions = false;
         isParsingLabels = false;
+        isParsingDescription = false;
       } else if (originalLine.startsWith('  - ') && isParsingOptions) {
         const content = line.replace(/^-\s*/, '').trim();
 
@@ -201,6 +240,9 @@ function parseQuestionBlock(block, index) {
         labelsList.push(line.replace(/^-\s*/, '').trim());
       } else if (originalLine.startsWith('  - ') && isParsingStatements) {
         statementsList.push(line.replace(/^-\s*/, '').trim());
+      } else if (isParsingDescription && (originalLine.startsWith('  ') || originalLine.trim() === '') && !line.startsWith('-')) {
+        // Collect indented description lines and blank lines for spacing
+        descriptionLines.push(line);
       }
     }
 
@@ -219,6 +261,15 @@ function parseQuestionBlock(block, index) {
 
     if (statementsList.length > 0) {
       metadata.statements = statementsList;
+    }
+
+    // Combine multiline description if we collected any lines
+    if (descriptionLines.length > 0) {
+      // If description already has single-line content, prepend it
+      if (metadata.description) {
+        descriptionLines.unshift(metadata.description);
+      }
+      metadata.description = descriptionLines.join('\n');
     }
 
     // Build question object
@@ -241,6 +292,9 @@ function parseQuestionBlock(block, index) {
     if (metadata.statements) question.statements = metadata.statements;
     if (metadata.depends_on) question.depends_on = metadata.depends_on;
     if (metadata.show_when) question.show_when = metadata.show_when;
+    if (metadata.description) question.description = metadata.description;
+    if (metadata.image) question.image = metadata.image;
+    if (metadata.imageAlt) question.imageAlt = metadata.imageAlt;
 
     // Validation: warn if show_when without depends_on
     if (metadata.show_when && !metadata.depends_on) {

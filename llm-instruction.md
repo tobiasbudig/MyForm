@@ -346,6 +346,115 @@ Multiple statements rated on the same scale.
 - The main option text is displayed in **bold**
 - You can mix simple strings and hierarchical objects in the same `options` array
 
+### 8. Information (`information`)
+
+Display informational content with optional image. This isn't a traditional question but allows you to present scenarios, instructions, or context before collecting answers.
+
+**Attributes:**
+- `type: information` (required)
+- `id` (string, optional): Unique identifier
+- `description` (string, optional): Main body text to display
+- `image` (string, optional): Filename of image in `server/resources/` folder
+- `imageAlt` (string, optional): Alt text for accessibility
+- `depends_on` (string): Question ID for conditional visibility
+- `show_when` (string): Answer value that triggers visibility
+
+**Basic example (no image):**
+```markdown
+# Important Information
+- type: information
+- description: Please read this carefully before proceeding. This survey will take approximately 5 minutes.
+
+---
+```
+
+**With multiline description (using `|` pipe):**
+```markdown
+# Study Instructions
+- type: information
+- description: |
+  Welcome to this medical case study.
+
+  You will be presented with several patient scenarios.
+  Please read each scenario carefully before answering.
+
+  Your responses are confidential.
+
+---
+```
+
+**With multiline description (indented lines - easier to read):**
+```markdown
+# Study Instructions
+- type: information
+- description:
+  Welcome to this medical case study.
+
+  You will be presented with several patient scenarios.
+  Please read each scenario carefully before answering.
+
+  Your responses are confidential.
+
+---
+```
+
+**With image:**
+```markdown
+# Patient Scenario
+- type: information
+- id: scenario_intro
+- description: |
+  A 45-year-old patient presents with acute chest pain radiating to the left arm.
+  Vital signs are stable.
+
+  Please review the diagnostic image below.
+- image: patient-xray-001.png
+- imageAlt: Chest X-ray showing mild opacity in right lung
+
+---
+```
+
+**With extra whitespace for visual sections:**
+```markdown
+# Study Overview
+- type: information
+- description:
+  PART 1: Introduction
+  This study examines patient outcomes across multiple scenarios.
+
+
+  PART 2: Instructions
+  Read each scenario carefully and answer all questions.
+  There are no right or wrong answers.
+
+
+  PART 3: Confidentiality
+  Your responses are anonymous and will only be used for research purposes.
+
+---
+```
+
+**Notes:**
+- The question heading (e.g., `# Important Information`) becomes the title
+- Description supports two multiline formats:
+  - Using `|` pipe character: `- description: |` followed by indented lines
+  - Using indented lines: `- description:` followed by indented lines (no pipe needed)
+- Line breaks and blank lines are preserved for spacing
+- Use blank lines to create visual separation between sections in the description
+- Images must be manually uploaded to `server/resources/` folder before use
+- Supported image formats: PNG, JPG, JPEG, GIF
+- Recommended image size: Under 500KB for fast loading
+- Users navigate using standard "Weiter" button at bottom of form
+- No answer is stored (purely informational display)
+- If image fails to load, it's hidden gracefully and description still displays
+- Information blocks can be conditional (using `depends_on`/`show_when`)
+
+**Image Management:**
+1. Place image files in `server/resources/` directory
+2. Reference by filename in `- image:` attribute
+3. Images are served at `/api/resources/{filename}`
+4. The resources folder is excluded from git (except .gitkeep)
+
 ## Conditional Logic
 
 Questions can be shown or hidden based on answers to previous questions.
@@ -567,6 +676,7 @@ Answers are stored in the database with these formats:
 - **Multiple Choice**: JSON array of strings
 - **Likert/NPS**: Number (0-10 for NPS, 0 to scale-1 for Likert)
 - **Grid**: JSON object with keys `statement_0`, `statement_1`, etc.
+- **Information**: No answer stored (purely informational, no data collected)
 
 ## Additional Notes
 
