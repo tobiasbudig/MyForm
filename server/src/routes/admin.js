@@ -6,10 +6,12 @@ const {
   checkSession,
   getForms,
   getFormSubmissions,
+  uploadForm,
 } = require('../controllers/adminController');
 const { verifyAdminSession } = require('../middleware/adminAuth');
 const { adminValidators } = require('../middleware/validator');
 const { adminLoginLimiter } = require('../middleware/rateLimiter');
+const { uploadFormFile } = require('../middleware/fileUpload');
 const { exportFormToCSV } = require('../services/csvExporter');
 const logger = require('../utils/logger');
 
@@ -24,6 +26,9 @@ router.get('/session', verifyAdminSession, checkSession);
 
 // GET /api/admin/forms - Get all forms with stats
 router.get('/forms', verifyAdminSession, getForms);
+
+// POST /api/admin/forms/upload - Upload a form markdown file
+router.post('/forms/upload', verifyAdminSession, uploadFormFile, uploadForm);
 
 // GET /api/admin/forms/:formId/submissions - Get submissions for a form
 router.get('/forms/:formId/submissions', verifyAdminSession, getFormSubmissions);

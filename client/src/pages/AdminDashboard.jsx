@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { getAdminForms, adminLogout } from '../utils/api';
+import FileUpload from '../components/FileUpload';
+import toast from 'react-hot-toast';
 
 export default function AdminDashboard() {
   const [forms, setForms] = useState([]);
@@ -8,26 +10,26 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const token = sessionStorage.getItem('adminToken');
 
+  const loadForms = async () => {
+    try {
+      const response = await getAdminForms(token);
+      if (response.success) {
+        setForms(response.data);
+      }
+    } catch (err) {
+      if (err.response?.status === 401) {
+        sessionStorage.removeItem('adminToken');
+        navigate('/admin');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!token) {
       navigate('/admin');
       return;
-    }
-
-    async function loadForms() {
-      try {
-        const response = await getAdminForms(token);
-        if (response.success) {
-          setForms(response.data);
-        }
-      } catch (err) {
-        if (err.response?.status === 401) {
-          sessionStorage.removeItem('adminToken');
-          navigate('/admin');
-        }
-      } finally {
-        setLoading(false);
-      }
     }
 
     loadForms();
@@ -41,6 +43,15 @@ export default function AdminDashboard() {
     }
     sessionStorage.removeItem('adminToken');
     navigate('/admin');
+  };
+
+  const handleUploadSuccess = (data) => {
+    toast.success(data.message || 'Formular erfolgreich hochgeladen!');
+    loadForms();
+  };
+
+  const handleUploadError = (error) => {
+    toast.error(error.userMessage || 'Upload fehlgeschlagen');
   };
 
   const formatDate = (dateString) => {
@@ -68,6 +79,12 @@ export default function AdminDashboard() {
             Abmelden
           </button>
         </div>
+
+        <FileUpload
+          token={token}
+          onUploadSuccess={handleUploadSuccess}
+          onUploadError={handleUploadError}
+        />
 
         {forms.length === 0 ? (
           <div className="bg-white p-12 rounded-lg text-center">

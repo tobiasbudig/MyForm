@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const db = require('../models/database');
 const logger = require('../utils/logger');
 const { parseForm, listForms } = require('../services/markdownParser');
+const formUploadService = require('../services/formUploadService');
 
 /**
  * Admin login
@@ -239,10 +240,54 @@ async function getFormSubmissions(req, res) {
   }
 }
 
+/**
+ * Upload a form markdown file
+ * POST /api/admin/forms/upload
+ */
+async function uploadForm(req, res) {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: 'No file uploaded',
+      });
+    }
+
+    const result = await formUploadService.saveFormFile(req.file);
+
+    logger.info('Form uploaded', {
+      formId: result.formId,
+      adminSession: req.adminSession.id,
+      replaced: result.replaced,
+    });
+
+    res.json({
+      success: true,
+      data: {
+        formId: result.formId,
+        message: result.replaced ? 'Form updated successfully' : 'Form created successfully',
+      },
+    });
+  } catch (error) {
+    logger.error('Form upload error', {
+      error: error.message,
+      stack: error.stack,
+    });
+
+    const statusCode = error.message.includes('Invalid') ? 400 : 500;
+
+    res.status(statusCode).json({
+      success: false,
+      error: error.message || 'Failed to upload form',
+    });
+  }
+}
+
 module.exports = {
   login,
   logout,
   checkSession,
   getForms,
   getFormSubmissions,
+  uploadForm,
 };

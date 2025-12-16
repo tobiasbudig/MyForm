@@ -202,4 +202,33 @@ export async function exportFormCsv(formId, token) {
   return response.data;
 }
 
+/**
+ * Upload a form markdown file
+ * @param {File} file - The markdown file to upload
+ * @param {string} token - Admin token
+ * @param {Function} onUploadProgress - Progress callback
+ * @returns {Promise<Object>} Upload result
+ */
+export async function uploadFormFile(file, token, onUploadProgress) {
+  const formData = new FormData();
+  formData.append('formFile', file);
+
+  const response = await api.post('/admin/forms/upload', formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+    onUploadProgress: (progressEvent) => {
+      if (onUploadProgress) {
+        const percentCompleted = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        onUploadProgress(percentCompleted);
+      }
+    },
+  });
+
+  return response.data;
+}
+
 export default api;
