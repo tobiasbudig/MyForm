@@ -1,7 +1,12 @@
 import { motion } from 'framer-motion';
 import Footer from './Footer';
+import { trackSurveyStart } from '../utils/tracker';
 
-export default function WelcomeScreen({ welcome, onStart }) {
+export default function WelcomeScreen({ welcome, onStart, formId }) {
+  const handleStart = () => {
+    trackSurveyStart(formId);
+    onStart();
+  };
   // Split heading by newlines to support multi-line titles
   const headingLines = welcome.heading.split('\n').filter(line => line.trim());
 
@@ -26,7 +31,7 @@ export default function WelcomeScreen({ welcome, onStart }) {
             {welcome.body}
           </p>
           <button
-            onClick={onStart}
+            onClick={handleStart}
             className="px-12 py-4 bg-primary text-white text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg"
           >
             {welcome.buttonText}

@@ -14,10 +14,14 @@ export default function QRRedirect() {
       return;
     }
 
+    // Add QR source parameter for tracking
+    const separator = targetUrl.includes('?') ? '&' : '?';
+    const urlWithQR = `${targetUrl}${separator}qr=${id}`;
+
     if (targetUrl.startsWith('http://') || targetUrl.startsWith('https://')) {
-      window.location.href = targetUrl;
+      window.location.href = urlWithQR;
     } else {
-      navigate(targetUrl, { replace: true });
+      navigate(urlWithQR, { replace: true });
     }
   }, [id, navigate]);
 

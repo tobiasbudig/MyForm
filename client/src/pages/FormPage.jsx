@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { getForm, startSubmission, saveAnswer, completeSubmission } from '../utils/api';
+import { trackPageView, trackQuestionView } from '../utils/tracker';
 import ProgressBar from '../components/ProgressBar';
 import WelcomeScreen from '../components/WelcomeScreen';
 import QuestionCard from '../components/QuestionCard';
@@ -114,6 +115,8 @@ export default function FormPage() {
         const response = await getForm(formId);
         if (response.success) {
           setForm(response.data);
+          // Track page view when form loads successfully
+          trackPageView(formId);
         } else {
           setError('Form not found');
         }
@@ -260,6 +263,14 @@ export default function FormPage() {
     }
   }, [answers, currentIndex, form?.questions, isQuestionVisible, getNextVisibleIndex]);
 
+  // Track question views
+  useEffect(() => {
+    if (currentIndex >= 0 && form?.questions && currentIndex < form.questions.length) {
+      const currentQuestion = form.questions[currentIndex];
+      trackQuestionView(formId, currentVisibleIndex, currentQuestion.id);
+    }
+  }, [currentIndex, formId, currentVisibleIndex, form?.questions]);
+
   // Navigate to next question
   const handleNext = async () => {
     const currentQuestion = form.questions[currentIndex];
@@ -317,12 +328,12 @@ export default function FormPage() {
 
   // Welcome screen
   if (currentIndex === -1) {
-    return <WelcomeScreen welcome={form.welcome} onStart={handleStart} />;
+    return <WelcomeScreen welcome={form.welcome} onStart={handleStart} formId={formId} />;
   }
 
   // Thank you screen
   if (currentIndex >= form.questions.length) {
-    return <ThankYouScreen thankYou={form.thankYou} />;
+    return <ThankYouScreen thankYou={form.thankYou} formId={formId} />;
   }
 
   // Question screen

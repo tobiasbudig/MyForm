@@ -72,17 +72,17 @@ db-reset:
 	@sleep 5
 	docker compose -f docker-compose.dev.yml up -d
 
-# Migrate existing database (adds comment column)
+# Run all pending database migrations (development)
 db-migrate:
-	@echo "Running database migration..."
-	docker compose -f docker-compose.dev.yml exec postgres psql -U myform -d myform_db -f /migrations/add_comment_column.sql
-	@echo "Migration complete!"
+	@echo "Running database migrations (development)..."
+	docker compose -f docker-compose.dev.yml exec server node scripts/migrate.js
+	@echo ""
 
-# Migrate production database
+# Run all pending database migrations (production)
 db-migrate-prod:
-	@echo "Running database migration on production..."
-	docker compose exec postgres psql -U myform -d myform_db -f /migrations/add_comment_column.sql
-	@echo "Migration complete!"
+	@echo "Running database migrations (production)..."
+	docker compose exec server node scripts/migrate.js
+	@echo ""
 
 # Help
 help:
@@ -119,5 +119,5 @@ help:
 	@echo "Database:"
 	@echo "  make db-shell         - Connect to database shell"
 	@echo "  make db-reset         - Reset database with fresh schema (deletes data!)"
-	@echo "  make db-migrate       - Migrate existing dev database (add comment column)"
-	@echo "  make db-migrate-prod  - Migrate existing prod database (add comment column)"
+	@echo "  make db-migrate       - Run all pending migrations (development)"
+	@echo "  make db-migrate-prod  - Run all pending migrations (production)"

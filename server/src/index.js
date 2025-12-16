@@ -59,6 +59,7 @@ app.get('/health', async (req, res) => {
 app.use('/api/forms', require('./routes/forms'));
 app.use('/api/submissions', require('./routes/submissions'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/tracking', require('./routes/tracking'));
 
 // 404 handler
 app.use(notFoundHandler);

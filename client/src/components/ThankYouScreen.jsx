@@ -1,7 +1,14 @@
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Footer from './Footer';
+import { trackSurveyComplete } from '../utils/tracker';
 
-export default function ThankYouScreen({ thankYou }) {
+export default function ThankYouScreen({ thankYou, formId }) {
+  // Track survey completion on mount
+  useEffect(() => {
+    trackSurveyComplete(formId);
+  }, [formId]);
+
   // Split heading by newlines to support multi-line titles
   const headingLines = thankYou.heading.split('\n').filter(line => line.trim());
 
