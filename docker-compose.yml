@@ -34,7 +34,7 @@ services:
       PORT: 3001
       CLIENT_URL: ${CLIENT_URL:-http://localhost}
     volumes:
-      - ./server/forms:/app/forms:ro
+      - ./server/forms:/app/forms
     ports:
       - "${SERVER_PORT:-3001}:3001"
     depends_on:
