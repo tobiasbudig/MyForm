@@ -237,4 +237,83 @@ export async function uploadFormFile(files, token, onUploadProgress) {
   return response.data;
 }
 
+// =====================
+// ANALYTICS API
+// =====================
+
+/**
+ * Get conversion funnel metrics
+ * @param {string} formId - The form ID
+ * @param {string} token - Admin token
+ * @returns {Promise<Object>} Funnel metrics
+ */
+export async function getAnalyticsFunnel(formId, token) {
+  const response = await api.get(`/admin/analytics/funnel?formId=${formId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+/**
+ * Get question drop-off analysis
+ * @param {string} formId - The form ID
+ * @param {string} token - Admin token
+ * @returns {Promise<Object>} Drop-off data
+ */
+export async function getAnalyticsDropoff(formId, token) {
+  const response = await api.get(`/admin/analytics/dropoff?formId=${formId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+/**
+ * Get QR source performance
+ * @param {string} formId - The form ID
+ * @param {string} token - Admin token
+ * @returns {Promise<Object>} Source performance data
+ */
+export async function getAnalyticsSources(formId, token) {
+  const response = await api.get(`/admin/analytics/sources?formId=${formId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+/**
+ * Get device breakdown
+ * @param {string} formId - The form ID
+ * @param {string} token - Admin token
+ * @returns {Promise<Object>} Device breakdown data
+ */
+export async function getAnalyticsDevices(formId, token) {
+  const response = await api.get(`/admin/analytics/devices?formId=${formId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
+/**
+ * Get timing metrics
+ * @param {string} formId - The form ID
+ * @param {string} token - Admin token
+ * @returns {Promise<Object>} Timing metrics
+ */
+export async function getAnalyticsTiming(formId, token) {
+  const response = await api.get(`/admin/analytics/timing?formId=${formId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
 export default api;

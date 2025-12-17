@@ -8,6 +8,7 @@ import QRRedirect from './pages/QRRedirect';
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminFormView from './pages/AdminFormView';
+import AdminAnalytics from './pages/AdminAnalytics';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/impressum" element={<Impressum />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/analytics" element={<AdminAnalytics />} />
           <Route path="/admin/forms/:formId" element={<AdminFormView />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

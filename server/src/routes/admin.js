@@ -8,6 +8,13 @@ const {
   getFormSubmissions,
   uploadForm,
 } = require('../controllers/adminController');
+const {
+  getFunnelMetrics,
+  getDropoffAnalysis,
+  getSourcePerformance,
+  getDeviceBreakdown,
+  getTimingMetrics,
+} = require('../controllers/analyticsController');
 const { verifyAdminSession } = require('../middleware/adminAuth');
 const { adminValidators } = require('../middleware/validator');
 const { adminLoginLimiter } = require('../middleware/rateLimiter');
@@ -55,5 +62,21 @@ router.get('/forms/:formId/export', verifyAdminSession, async (req, res) => {
     });
   }
 });
+
+// Analytics routes
+// GET /api/admin/analytics/funnel - Get conversion funnel metrics
+router.get('/analytics/funnel', verifyAdminSession, getFunnelMetrics);
+
+// GET /api/admin/analytics/dropoff - Get question drop-off analysis
+router.get('/analytics/dropoff', verifyAdminSession, getDropoffAnalysis);
+
+// GET /api/admin/analytics/sources - Get QR source performance
+router.get('/analytics/sources', verifyAdminSession, getSourcePerformance);
+
+// GET /api/admin/analytics/devices - Get device breakdown
+router.get('/analytics/devices', verifyAdminSession, getDeviceBreakdown);
+
+// GET /api/admin/analytics/timing - Get timing metrics
+router.get('/analytics/timing', verifyAdminSession, getTimingMetrics);
 
 module.exports = router;
