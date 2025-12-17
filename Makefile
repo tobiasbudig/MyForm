@@ -1,4 +1,4 @@
-.PHONY: dev prod down logs db-shell clean rebuild db-reset db-migrate db-migrate-prod help install-npm impressum doctor-form mfa-form nurse-form participant-form
+.PHONY: dev prod down logs db-shell clean rebuild db-reset-dev db-reset-prod db-migrate db-migrate-prod help install-npm impressum doctor-form mfa-form nurse-form participant-form
 
 # Development
 dev:
@@ -65,14 +65,31 @@ rebuild:
 	docker compose -f docker-compose.dev.yml build --no-cache
 	docker compose -f docker-compose.dev.yml up
 
-# Reset database
-db-reset:
+# Reset database (development)
+db-reset-dev:
 	docker compose -f docker-compose.dev.yml down -v
 	docker compose -f docker-compose.dev.yml up -d postgres
 	@echo "Waiting for PostgreSQL to initialize..."
 	@sleep 5
 	docker compose -f docker-compose.dev.yml up -d
+	@echo "Waiting for server to be ready..."
+	@sleep 3
+	@echo "Running database migrations..."
+	docker compose -f docker-compose.dev.yml exec server node scripts/migrate.js
+	@echo "Database reset complete!"
 
+# Reset database (production)
+db-reset-prod:
+	docker compose down -v
+	docker compose up -d postgres
+	@echo "Waiting for PostgreSQL to initialize..."
+	@sleep 5
+	docker compose up -d
+	@echo "Waiting for server to be ready..."
+	@sleep 3
+	@echo "Running database migrations..."
+	docker compose exec server node scripts/migrate.js
+	@echo "Database reset complete!"
 # Run all pending database migrations (development)
 db-migrate:
 	@echo "Running database migrations (development)..."
@@ -119,6 +136,7 @@ help:
 	@echo ""
 	@echo "Database:"
 	@echo "  make db-shell         - Connect to database shell"
-	@echo "  make db-reset         - Reset database with fresh schema (deletes data!)"
+	@echo "  make db-reset-dev     - Reset database with fresh schema (development, deletes data!)"
+	@echo "  make db-reset-prod    - Reset database with fresh schema (production, deletes data!)"
 	@echo "  make db-migrate       - Run all pending migrations (development)"
 	@echo "  make db-migrate-prod  - Run all pending migrations (production)"

@@ -19,7 +19,7 @@ async function runMigrations() {
     logger.info('Schema migrations table ready');
 
     // Get all migration files from database directory
-    const migrationsDir = path.join(__dirname, '../../database');
+    const migrationsDir = path.join(__dirname, '../database');
     const files = fs.readdirSync(migrationsDir)
       .filter(f => f.endsWith('.sql'))
       .sort(); // Run in alphabetical order

@@ -9,6 +9,7 @@ services:
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/create_tracking_events.sql:/docker-entrypoint-initdb.d/02-create_tracking_events.sql:ro
       - ./database/add_comment_column.sql:/migrations/add_comment_column.sql:ro
     ports:
       - "${DB_PORT:-5432}:5432"
@@ -36,6 +37,7 @@ services:
       - ./server/forms:/app/forms
       - ./server/package.json:/app/package.json:ro
       - ./server/logs:/app/logs
+      - ./database:/app/database:ro
     ports:
       - "3001:3001"
     depends_on:
