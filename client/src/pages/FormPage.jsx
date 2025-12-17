@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { getForm, startSubmission, saveAnswer, completeSubmission } from '../utils/api';
-import { trackPageView, trackQuestionView } from '../utils/tracker';
+import { trackPageView, trackQuestionView, trackSurveyStart } from '../utils/tracker';
 import ProgressBar from '../components/ProgressBar';
 import WelcomeScreen from '../components/WelcomeScreen';
 import QuestionCard from '../components/QuestionCard';
@@ -113,13 +113,14 @@ export default function FormPage() {
   // Load form configuration
   useEffect(() => {
     async function loadForm() {
+      // Track page view first, regardless of whether form loads successfully
+      trackPageView(formId);
+
       try {
         setLoading(true);
         const response = await getForm(formId);
         if (response.success) {
           setForm(response.data);
-          // Track page view when form loads successfully
-          trackPageView(formId);
         } else {
           setError('Form not found');
         }
@@ -167,6 +168,9 @@ export default function FormPage() {
   // Start submission when entering first question
   const handleStart = async () => {
     try {
+      // Track survey start (regardless of whether welcome screen was shown)
+      trackSurveyStart(formId);
+
       const response = await startSubmission(formId);
       if (response.success) {
         setSubmissionId(response.data.submissionId);

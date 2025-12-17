@@ -10,7 +10,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
-      - ./database/add_comment_column.sql:/migrations/add_comment_column.sql:ro
+      - ./database/add_comment_column.sql:/docker-entrypoint-initdb.d/02-add_comment_column.sql:ro
+      - ./database/create_tracking_events.sql:/docker-entrypoint-initdb.d/03-create_tracking_events.sql:ro
     ports:
       - "${DB_PORT:-5432}:5432"
     healthcheck:

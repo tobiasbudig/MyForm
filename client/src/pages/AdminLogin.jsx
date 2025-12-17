@@ -49,6 +49,7 @@ export default function AdminLogin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-3 border-2 border-border rounded-lg focus:border-primary transition-default"
+              autoComplete="current-password"
               required
             />
           </div>
