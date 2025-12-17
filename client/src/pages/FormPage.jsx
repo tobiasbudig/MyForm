@@ -164,7 +164,7 @@ export default function FormPage() {
         setCurrentIndex(0);
       }
     } catch (err) {
-      alert('Umfrage konnte nicht gestartet werden. Bitte versuchen Sie es erneut.');
+      toast.error('Umfrage konnte nicht gestartet werden. Bitte versuchen Sie es erneut.');
     }
   };
 
@@ -204,6 +204,7 @@ export default function FormPage() {
   const handleAnswerChange = useCallback(
     async (questionId, questionText, value) => {
       setAnswers((prev) => ({ ...prev, [questionId]: value }));
+      answersRef.current = { ...answersRef.current, [questionId]: value };
 
       if (!submissionId || !csrfToken) return;
 
@@ -276,8 +277,8 @@ export default function FormPage() {
     const currentQuestion = form.questions[currentIndex];
 
     // Validation
-    if (currentQuestion.required && !answers[currentQuestion.id]) {
-      alert('Diese Frage ist erforderlich');
+    if (currentQuestion.required && !answersRef.current[currentQuestion.id]) {
+      toast.error('Diese Frage ist erforderlich');
       return;
     }
 
@@ -308,7 +309,7 @@ export default function FormPage() {
       await completeSubmission(submissionId, csrfToken);
       setCurrentIndex(form.questions.length); // Move to thank you screen
     } catch (err) {
-      alert('Umfrage konnte nicht übermittelt werden. Bitte versuchen Sie es erneut.');
+      toast.error('Umfrage konnte nicht übermittelt werden. Bitte versuchen Sie es erneut.');
     }
   };
 
