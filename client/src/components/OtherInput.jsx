@@ -43,7 +43,7 @@ export default function OtherInput({
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             maxLength={maxLength}
-            className="w-full mt-3 px-4 py-3 text-base border border-border rounded-lg focus:border-primary focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-default"
+            className="bg-white text-textPrimary w-full mt-3 px-4 py-3 text-base border border-border rounded-lg focus:border-primary focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-default"
           />
           <div className="mt-1 text-sm text-textSecondary text-right">
             {(value || '').length} / {maxLength}

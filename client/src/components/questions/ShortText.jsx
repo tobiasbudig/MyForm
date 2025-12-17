@@ -26,7 +26,7 @@ export default function ShortText({ question, value, onChange, onSubmit, comment
         onKeyDown={handleKeyDown}
         placeholder={question.placeholder || 'Your answer...'}
         maxLength={maxLength}
-        className="w-full px-4 py-3 text-lg border border-border rounded-lg focus:border-primary focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-default"
+        className="bg-white text-textPrimary w-full px-4 py-3 text-lg border border-border rounded-lg focus:border-primary focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-default"
       />
       <div className="mt-2 text-sm text-textSecondary text-right">
         {(value || '').length} / {maxLength}

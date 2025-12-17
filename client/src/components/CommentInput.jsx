@@ -37,7 +37,7 @@ export default function CommentInput({ value, onChange, maxLength = 500 }) {
               placeholder="Zusätzliche Gedanken oder Kontext hinzufügen..."
               maxLength={maxLength}
               rows={3}
-              className="w-full mt-3 px-4 py-3 text-base border border-border rounded-lg focus:border-primary focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-default resize-none"
+              className="bg-white text-textPrimary w-full mt-3 px-4 py-3 text-base border border-border rounded-lg focus:border-primary focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-default resize-none"
             />
             <div className="text-sm text-textSecondary text-right mt-1">
               {(value || '').length} / {maxLength}

@@ -6,6 +6,7 @@
   body {
     @apply bg-white text-textPrimary antialiased;
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', 'Roboto', system-ui, sans-serif;
+    color-scheme: light;
   }
 
   * {
@@ -17,4 +18,18 @@
   .transition-default {
     @apply transition-all duration-200 ease-in-out;
   }
+}
+
+/* Force light backgrounds on autofilled inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #1A1A1A !important;
+  box-shadow: 0 0 0 30px white inset !important;
 }

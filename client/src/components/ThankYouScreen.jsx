@@ -50,22 +50,6 @@ export default function ThankYouScreen({ thankYou, formId }) {
           <p className="text-xl text-textSecondary mb-12">
             {thankYou.body}
           </p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="mt-8"
-          >
-            <p className="text-lg text-textSecondary mb-6">
-              Als Dankeschön ein KI Transkruptions Tool bekommen
-            </p>
-            <a
-              href="mailto:example@mail.com"
-              className="inline-block px-12 py-4 bg-primary text-white text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg"
-            >
-              Email schreiben
-            </a>
-          </motion.div>
         </div>
       </div>
       <Footer />

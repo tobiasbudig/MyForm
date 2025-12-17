@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CommentInput from '../CommentInput';
 
@@ -10,6 +10,8 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
   const options = question.options || [];
 
   const [currentStatementIndex, setCurrentStatementIndex] = useState(0);
+  const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
+  const timeoutRef = useRef(null);
 
   // Normalize option to handle both string and object formats
   const normalizeOption = (option) => {
@@ -25,7 +27,21 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
     return normalized.text;
   };
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleSelect = (statementIndex, option) => {
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
     const optionText = getOptionText(option);
     const newSelections = {
       ...selections,
@@ -33,10 +49,17 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
     };
     onChange(newSelections);
 
-    // Auto-advance to next statement (but not submit - main "Weiter" button handles that)
+    // Auto-advance to next statement
     if (currentStatementIndex < statements.length - 1) {
       setTimeout(() => {
         setCurrentStatementIndex(currentStatementIndex + 1);
+      }, 300);
+    }
+    // On last statement, auto-submit to next question
+    else {
+      setIsAutoAdvancing(true);
+      timeoutRef.current = setTimeout(() => {
+        onSubmit();
       }, 300);
     }
   };
