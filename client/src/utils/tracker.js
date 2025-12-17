@@ -3,7 +3,7 @@
  * Tracks events from QR scan to survey completion
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 /**
  * Generate or retrieve session ID from sessionStorage
@@ -57,7 +57,7 @@ export async function trackEvent(eventType, formId, eventData = {}) {
     };
 
     // Send event to server (fire and forget - don't wait for response)
-    fetch(`${API_URL}/api/tracking/event`, {
+    fetch(`${API_BASE_URL}/tracking/event`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
