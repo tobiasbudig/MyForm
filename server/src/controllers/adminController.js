@@ -241,32 +241,59 @@ async function getFormSubmissions(req, res) {
 }
 
 /**
- * Upload a form markdown file
+ * Upload form markdown file(s)
  * POST /api/admin/forms/upload
  */
 async function uploadForm(req, res) {
   try {
-    if (!req.file) {
+    const files = req.files || (req.file ? [req.file] : []);
+
+    if (files.length === 0) {
       return res.status(400).json({
         success: false,
-        error: 'No file uploaded',
+        error: 'No files uploaded',
       });
     }
 
-    const result = await formUploadService.saveFormFile(req.file);
+    const results = {
+      uploaded: [],
+      failed: [],
+    };
 
-    logger.info('Form uploaded', {
-      formId: result.formId,
-      adminSession: req.adminSession.id,
-      replaced: result.replaced,
-    });
+    for (const file of files) {
+      try {
+        const result = await formUploadService.saveFormFile(file);
 
-    res.json({
-      success: true,
-      data: {
-        formId: result.formId,
-        message: result.replaced ? 'Form updated successfully' : 'Form created successfully',
-      },
+        results.uploaded.push({
+          formId: result.formId,
+          filename: result.filename,
+          message: result.replaced ? 'Updated' : 'Created',
+        });
+
+        logger.info('Form uploaded', {
+          formId: result.formId,
+          adminSession: req.adminSession.id,
+          replaced: result.replaced,
+        });
+      } catch (fileError) {
+        results.failed.push({
+          filename: file.originalname,
+          error: fileError.message,
+        });
+
+        logger.error('Form upload error for file', {
+          filename: file.originalname,
+          error: fileError.message,
+        });
+      }
+    }
+
+    const allFailed = results.uploaded.length === 0;
+    const statusCode = allFailed ? 400 : 200;
+
+    res.status(statusCode).json({
+      success: results.uploaded.length > 0,
+      data: results,
     });
   } catch (error) {
     logger.error('Form upload error', {
@@ -274,11 +301,9 @@ async function uploadForm(req, res) {
       stack: error.stack,
     });
 
-    const statusCode = error.message.includes('Invalid') ? 400 : 500;
-
-    res.status(statusCode).json({
+    res.status(500).json({
       success: false,
-      error: error.message || 'Failed to upload form',
+      error: error.message || 'Failed to upload forms',
     });
   }
 }

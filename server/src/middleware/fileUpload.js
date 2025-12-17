@@ -27,7 +27,9 @@ const upload = multer({
 });
 
 const uploadFormFile = upload.single('formFile');
+const uploadFormFiles = upload.array('formFile', 10);
 
 module.exports = {
   uploadFormFile,
+  uploadFormFiles,
 };

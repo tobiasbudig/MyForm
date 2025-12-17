@@ -16,16 +16,17 @@ impressum:
 
 # Forms
 doctor-form:
-	nano server/forms/doctor.md
+
+	rm server/forms/doctor.md && nano server/forms/doctor.md
 
 mfa-form:
-	nano server/forms/mfa.md
+	rm server/forms/mfa.md && nano server/forms/mfa.md
 
 nurse-form:
-	nano server/forms/nurse.md
+	rm server/forms/nurse.md && nano server/forms/nurse.md
 
 participant-form:
-	nano server/forms/participant.md
+	rm server/forms/participant.md && nano server/forms/participant.md
 
 # Production
 prod:
