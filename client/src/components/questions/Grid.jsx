@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CommentInput from '../CommentInput';
 
-export default function Grid({ question, value, onChange, onSubmit, comment, onCommentChange }) {
+export default function Grid({ question, value, onChange, onSubmit, comment, onCommentChange, gridNavigationRef }) {
   // Value is an object: { statement_0: "Option A", statement_1: "Option B" }
   const selections = typeof value === 'object' && value !== null ? value : {};
 
@@ -33,15 +33,10 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
     };
     onChange(newSelections);
 
-    // Auto-advance to next statement or submit if last statement
+    // Auto-advance to next statement (but not submit - main "Weiter" button handles that)
     if (currentStatementIndex < statements.length - 1) {
       setTimeout(() => {
         setCurrentStatementIndex(currentStatementIndex + 1);
-      }, 300);
-    } else {
-      // Last statement - auto-submit after delay
-      setTimeout(() => {
-        onSubmit();
       }, 300);
     }
   };
@@ -57,6 +52,20 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
       setCurrentStatementIndex(currentStatementIndex + 1);
     }
   };
+
+  // Expose navigation methods to parent via ref
+  useEffect(() => {
+    if (gridNavigationRef) {
+      gridNavigationRef.current = {
+        canGoBack: currentStatementIndex > 0,
+        canGoNext: currentStatementIndex < statements.length - 1,
+        goBack: handlePrevStatement,
+        goNext: handleNextStatement,
+        currentIndex: currentStatementIndex,
+        totalStatements: statements.length,
+      };
+    }
+  }, [currentStatementIndex, statements.length, gridNavigationRef]);
 
   return (
     <div className="w-full">
@@ -131,18 +140,6 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
             })}
           </div>
 
-          {/* Navigation Buttons */}
-          <div className="flex gap-3 mt-4">
-            {currentStatementIndex > 0 && (
-              <button
-                type="button"
-                onClick={handlePrevStatement}
-                className="px-4 py-2 border-2 border-border rounded-lg hover:border-primary transition-default"
-              >
-                Previous
-              </button>
-            )}
-          </div>
         </motion.div>
       </AnimatePresence>
 

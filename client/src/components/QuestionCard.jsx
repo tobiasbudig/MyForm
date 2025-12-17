@@ -31,6 +31,7 @@ export default function QuestionCard({
   onSubmit,
   comment,
   onCommentChange,
+  gridNavigationRef,
 }) {
   const [showExplanation, setShowExplanation] = useState(false);
   const QuestionComponent = questionComponents[question.type];
@@ -89,6 +90,7 @@ export default function QuestionCard({
             onSubmit={onSubmit}
             comment={comment}
             onCommentChange={onCommentChange}
+            gridNavigationRef={question.type === 'grid' ? gridNavigationRef : undefined}
           />
         </div>
       </div>

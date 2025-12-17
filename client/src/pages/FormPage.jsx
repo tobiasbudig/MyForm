@@ -27,6 +27,9 @@ export default function FormPage() {
   // Use ref for synchronous access to latest answers (fixes async state issue in auto-advance)
   const answersRef = useRef({});
 
+  // Ref for Grid question navigation control
+  const gridNavRef = useRef(null);
+
   // Sync ref with state immediately on every render
   useEffect(() => {
     answersRef.current = answers;
@@ -272,12 +275,29 @@ export default function FormPage() {
     }
   }, [currentIndex, formId, currentVisibleIndex, form?.questions]);
 
-  // Navigate to next question
+  // Navigate to next question or statement (for Grid)
   const handleNext = async () => {
     const currentQuestion = form.questions[currentIndex];
 
-    // Validation
-    if (currentQuestion.required && !answersRef.current[currentQuestion.id]) {
+    // Check if current question is Grid and has internal navigation
+    if (gridNavRef.current?.canGoNext) {
+      gridNavRef.current.goNext();
+      return;
+    }
+
+    // Validation for Grid questions
+    if (currentQuestion.type === 'grid' && currentQuestion.required) {
+      const gridAnswer = answersRef.current[currentQuestion.id];
+      const statements = currentQuestion.statements || [];
+      const allAnswered = statements.every((_, idx) => gridAnswer?.[`statement_${idx}`]);
+
+      if (!allAnswered) {
+        toast.error('Bitte beantworten Sie alle Aussagen');
+        return;
+      }
+    }
+    // Validation for other question types
+    else if (currentQuestion.required && !answersRef.current[currentQuestion.id]) {
       toast.error('Diese Frage ist erforderlich');
       return;
     }
@@ -291,10 +311,15 @@ export default function FormPage() {
     }
   };
 
-  // Go back to previous question
+  // Go back to previous question or statement (for Grid)
   const handleBack = () => {
-    const prevIndex = getPreviousVisibleIndex(currentIndex);
-    setCurrentIndex(prevIndex);
+    // Check if current question is Grid and has internal navigation
+    if (gridNavRef.current?.canGoBack) {
+      gridNavRef.current.goBack();
+    } else {
+      const prevIndex = getPreviousVisibleIndex(currentIndex);
+      setCurrentIndex(prevIndex);
+    }
   };
 
   // Skip optional question
@@ -363,6 +388,7 @@ export default function FormPage() {
             onCommentChange={(commentText) =>
               handleCommentChange(currentQuestion.id, commentText)
             }
+            gridNavigationRef={gridNavRef}
           />
         </AnimatePresence>
 
@@ -371,12 +397,29 @@ export default function FormPage() {
             onBack={handleBack}
             onNext={handleNext}
             onSkip={handleSkip}
-            canGoBack={currentIndex > 0}
+            canGoBack={currentIndex > 0 || gridNavRef.current?.canGoBack}
             canSkip={!currentQuestion.required}
             nextLabel={
-              currentIndex === form.questions.length - 1 ? 'Absenden' : 'Weiter'
+              gridNavRef.current?.canGoNext
+                ? 'Weiter'
+                : currentIndex === form.questions.length - 1
+                ? 'Absenden'
+                : 'Weiter'
             }
-            nextDisabled={currentQuestion.required && !answers[currentQuestion.id]}
+            nextDisabled={
+              // Enable if navigating within grid
+              gridNavRef.current?.canGoNext
+                ? false
+                : // For Grid questions, check if all statements answered
+                currentQuestion.type === 'grid' && currentQuestion.required
+                ? !(() => {
+                    const gridAnswer = answers[currentQuestion.id];
+                    const statements = currentQuestion.statements || [];
+                    return statements.every((_, idx) => gridAnswer?.[`statement_${idx}`]);
+                  })()
+                : // For other questions, check if answered
+                  currentQuestion.required && !answers[currentQuestion.id]
+            }
           />
         </div>
       </div>
