@@ -36,6 +36,15 @@ export default function Grid({ question, value, onChange, onSubmit, comment, onC
     };
   }, []);
 
+  // Cleanup navigation ref on unmount
+  useEffect(() => {
+    return () => {
+      if (gridNavigationRef) {
+        gridNavigationRef.current = null;
+      }
+    };
+  }, [gridNavigationRef]);
+
   const handleSelect = (statementIndex, option) => {
     // Clear any existing timeout
     if (timeoutRef.current) {
