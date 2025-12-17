@@ -203,15 +203,21 @@ export async function exportFormCsv(formId, token) {
 }
 
 /**
- * Upload a form markdown file
- * @param {File} file - The markdown file to upload
+ * Upload a form markdown file or multiple files
+ * @param {File|File[]} files - The markdown file(s) to upload
  * @param {string} token - Admin token
  * @param {Function} onUploadProgress - Progress callback
  * @returns {Promise<Object>} Upload result
  */
-export async function uploadFormFile(file, token, onUploadProgress) {
+export async function uploadFormFile(files, token, onUploadProgress) {
   const formData = new FormData();
-  formData.append('formFile', file);
+
+  // Handle both single file and array of files
+  const fileArray = Array.isArray(files) ? files : [files];
+
+  fileArray.forEach(file => {
+    formData.append('formFile', file);
+  });
 
   const response = await api.post('/admin/forms/upload', formData, {
     headers: {

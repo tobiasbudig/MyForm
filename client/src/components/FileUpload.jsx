@@ -81,14 +81,9 @@ export default function FileUpload({ onUploadSuccess, onUploadError, token }) {
 
     try {
       const { uploadFormFile } = await import('../utils/api');
-      const formData = new FormData();
-
-      selectedFiles.forEach((file) => {
-        formData.append('formFile', file);
-      });
 
       const response = await uploadFormFile(
-        formData,
+        selectedFiles,
         token,
         (progress) => setUploadProgress(progress)
       );
