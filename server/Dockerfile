@@ -28,6 +28,9 @@ COPY --link --from=builder --chown=1001:1001 /app/src ./src
 COPY --link --from=builder --chown=1001:1001 /app/scripts ./scripts
 COPY --link --from=builder --chown=1001:1001 /app/package.json ./
 
+# Create forms directory with wider permissions (allows container + host user to write)
+RUN mkdir -p /app/forms && chmod 777 /app/forms
+
 USER nodejs
 
 EXPOSE 3001
