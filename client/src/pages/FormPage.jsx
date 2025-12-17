@@ -133,6 +133,13 @@ export default function FormPage() {
     loadForm();
   }, [formId]);
 
+  // Auto-skip welcome screen if not configured
+  useEffect(() => {
+    if (form && !form.welcome && currentIndex === -1) {
+      handleStart();
+    }
+  }, [form, currentIndex]);
+
   // Detect circular dependencies on form load
   useEffect(() => {
     if (!form?.questions) return;
@@ -352,9 +359,14 @@ export default function FormPage() {
     return <FormNotFound />;
   }
 
-  // Welcome screen
-  if (currentIndex === -1) {
+  // Welcome screen (only if welcome is configured)
+  if (currentIndex === -1 && form.welcome) {
     return <WelcomeScreen welcome={form.welcome} onStart={handleStart} formId={formId} />;
+  }
+
+  // If still at -1 but no welcome, wait for auto-skip to trigger
+  if (currentIndex === -1) {
+    return null;
   }
 
   // Thank you screen

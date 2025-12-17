@@ -28,13 +28,9 @@ async function parseForm(formId) {
 
     return {
       id: formId,
-      title: frontmatter.title || 'Untitled Form',
-      description: frontmatter.description || '',
-      welcome: frontmatter.welcome || {
-        heading: 'Welcome',
-        body: 'Please complete this form.',
-        buttonText: 'Start',
-      },
+      ...(frontmatter.title && { title: frontmatter.title }),
+      ...(frontmatter.description && { description: frontmatter.description }),
+      ...(frontmatter.welcome && { welcome: frontmatter.welcome }),
       thankYou: frontmatter.thankYou || {
         heading: 'Thank You!',
         body: 'Your responses have been submitted.',
