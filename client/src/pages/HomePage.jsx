@@ -16,7 +16,7 @@ export default function HomePage() {
 
           <p className="text-lg sm:text-2xl font-medium text-gray-500 mb-12">
             Als Forschende der ETH Zürich möchten wir verstehen wie KI den Medizinischen Alltag verbessern kann! <br /> Die Umfrage dauert nur 3-4 Minuten - Versprochen!  <br />
-Vielen Dank für ihre Hilfe!
+Vielen Dank für Ihre Hilfe!
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-4xl mx-auto">
             <Link
@@ -29,7 +29,7 @@ Vielen Dank für ihre Hilfe!
               to="/form/mfa"
               className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-primary text-white text-base sm:text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg h-16 flex items-center justify-center"
             >
-              Ich bin MFA / MPA
+              Ich bin Praxisteam (MFA / MPA / Administration )
             </Link>
             <Link
               to="/form/nurse"
