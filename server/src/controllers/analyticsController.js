@@ -307,14 +307,14 @@ async function getTimingMetrics(req, res) {
     res.json({
       success: true,
       data: {
-        avgTimeToStart: metrics.avg_time_to_start ? parseFloat(metrics.avg_time_to_start.toFixed(1)) : 0,
-        medianTimeToStart: metrics.median_time_to_start ? parseFloat(metrics.median_time_to_start.toFixed(1)) : 0,
-        avgCompletionTime: metrics.avg_completion_time ? parseFloat(metrics.avg_completion_time.toFixed(1)) : 0,
-        medianCompletionTime: metrics.median_completion_time ? parseFloat(metrics.median_completion_time.toFixed(1)) : 0,
+        avgTimeToStart: metrics.avg_time_to_start != null ? parseFloat(Number(metrics.avg_time_to_start).toFixed(1)) : 0,
+        medianTimeToStart: metrics.median_time_to_start != null ? parseFloat(Number(metrics.median_time_to_start).toFixed(1)) : 0,
+        avgCompletionTime: metrics.avg_completion_time != null ? parseFloat(Number(metrics.avg_completion_time).toFixed(1)) : 0,
+        medianCompletionTime: metrics.median_completion_time != null ? parseFloat(Number(metrics.median_completion_time).toFixed(1)) : 0,
         quickExitsCount: parseInt(metrics.quick_exits) || 0,
-        quickExitsRate: ((parseInt(metrics.quick_exits) / totalSessions) * 100).toFixed(1),
+        quickExitsRate: parseFloat(((parseInt(metrics.quick_exits) || 0) / totalSessions * 100).toFixed(1)),
         confusedUsersCount: parseInt(metrics.confused_users) || 0,
-        confusedUsersRate: ((parseInt(metrics.confused_users) / totalSessions) * 100).toFixed(1)
+        confusedUsersRate: parseFloat(((parseInt(metrics.confused_users) || 0) / totalSessions * 100).toFixed(1))
       }
     });
   } catch (error) {

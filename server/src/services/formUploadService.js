@@ -62,7 +62,15 @@ async function saveFormFile(file) {
   await fs.writeFile(filePath, fileContent, 'utf-8');
 
   // Set permissions to allow both container and host user to read/write
-  await fs.chmod(filePath, 0o666);
+  // Ignore permission errors if we don't own the file (it may already have correct permissions)
+  try {
+    await fs.chmod(filePath, 0o666);
+  } catch (error) {
+    if (error.code !== 'EPERM') {
+      throw error;
+    }
+    // EPERM is expected when we don't own the file - that's okay
+  }
 
   return {
     formId,
