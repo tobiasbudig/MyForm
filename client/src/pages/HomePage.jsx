@@ -21,25 +21,25 @@ Vielen Dank für Ihre Hilfe!
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-4xl mx-auto">
             <Link
               to="/form/doctor"
-              className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-primary text-white text-base sm:text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg h-16 flex items-center justify-center"
+              className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-primary text-white text-base sm:text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg h-20 flex items-center justify-center"
             >
               Ich bin Ärzt*in
             </Link>
             <Link
               to="/form/mfa"
-              className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-primary text-white text-base sm:text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg h-16 flex items-center justify-center"
+              className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-primary text-white text-base sm:text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg h-20 flex items-center justify-center"
             >
               Ich bin Praxisteam (MFA / MPA / Administration )
             </Link>
             <Link
               to="/form/nurse"
-              className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-primary text-white text-base sm:text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg h-16 flex items-center justify-center"
+              className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-primary text-white text-base sm:text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg h-20 flex items-center justify-center"
             >
               Ich bin Pflegefachperson
             </Link>
             <Link
               to="/form/participant"
-              className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-primary text-white text-base sm:text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg h-16 flex items-center justify-center"
+              className="w-full px-4 sm:px-6 lg:px-8 py-4 bg-primary text-white text-base sm:text-lg rounded-lg font-medium hover:bg-primary-hover transition-default hover:scale-105 hover:shadow-lg h-20 flex items-center justify-center"
             >
               Alle anderen
             </Link>
