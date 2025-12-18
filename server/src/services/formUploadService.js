@@ -61,6 +61,9 @@ async function saveFormFile(file) {
 
   await fs.writeFile(filePath, fileContent, 'utf-8');
 
+  // Set permissions to allow both container and host user to read/write
+  await fs.chmod(filePath, 0o666);
+
   return {
     formId,
     filename: sanitizedFilename,

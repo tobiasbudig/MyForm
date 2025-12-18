@@ -65,6 +65,11 @@ rebuild:
 	docker compose -f docker-compose.dev.yml build --no-cache
 	docker compose -f docker-compose.dev.yml up
 
+# Rebuild without cache (production)
+rebuild-prod:
+	docker compose build --no-cache
+	docker compose up
+
 # Reset database (development)
 db-reset-dev:
 	docker compose -f docker-compose.dev.yml down -v

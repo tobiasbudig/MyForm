@@ -31,6 +31,9 @@ COPY --link --from=builder --chown=1001:1001 /app/package.json ./
 # Create forms directory with wider permissions (allows container + host user to write)
 RUN mkdir -p /app/forms && chmod 777 /app/forms
 
+# Set umask to create files with more permissive default permissions (664)
+ENV UMASK=0002
+
 USER nodejs
 
 EXPOSE 3001
